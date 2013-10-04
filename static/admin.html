@@ -1,0 +1,64 @@
+<!doctype html>
+<html>
+<head>
+ <meta charset="utf-8">
+ <title>Fukuro &bull; Admin</title>
+ <link rel="stylesheet" href="/s/fonts.css">
+ <link rel="stylesheet" href="/s/common.css">
+</head>
+
+<body>
+
+<div class="timer"></div>
+<div class="scoreboard"></div>
+<div class="question"></div>
+<div class="answer"></div>
+<div class="log"></div>
+
+<div class="chat">
+  <textarea class="chat_messagebox"></textarea>
+  <span class="chat_messagebox_hotkey">Press <i class="chat_messagebox_hotkey_mod">Ctrl</i>+Enter to</span>
+  <button class="chat_messagebox_send">Send message</button>
+</div>
+<div class="user" hidden>
+  <input class="user_nickname" type="text" placeholder="Nickname">
+  <button class="user_join">Join chat</button>
+</div>
+
+
+<script src="/a/ender.min.js"></script>
+<script src="/a/d3.v3.min.js"></script>
+<script src="/a/primus.js"></script>
+<script src="/a/chat.js"></script>
+<script src="/a/game.js"></script>
+<script>
+
+var primus = new Primus();
+
+var chat = new Chat(
+    { d3            : d3
+    , transport     : primus
+    , messageList   : '.log'
+    , messageBox    : '.chat_messagebox'
+    , submitButton  : '.chat_messagebox_send'
+    , hotkeyMod     : '.chat_messagebox_hotkey_mod'
+    , userPanel     : '.user'
+    , nicknameBox   : '.user_nickname'
+    , userJoinButton: '.user_join'
+    })
+  ;
+
+var game = new Game(
+    { type      : 'admin'
+    , d3        : d3
+    , transport : primus
+    , scoreboard: '.scoreboard'
+    , timer     : '.timer'
+    , question  : '.question'
+    , answer    : '.answer'
+    })
+  ;
+
+</script>
+</body>
+</html>

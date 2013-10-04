@@ -1,0 +1,35 @@
+@font-face
+{
+    font-family: "Websymbols";
+    font-weight: normal;
+    font-style: normal;
+    src: url('/f/websymbols-regular.woff') format('woff');
+}
+@font-face
+{
+    font-family: 'Ubuntu Mono';
+    font-style: normal;
+    font-weight: normal;
+    src: url('/f/ubuntu_mono-regular.woff') format('woff');
+}
+@font-face
+{
+    font-family: 'Ubuntu Condensed';
+    font-style: normal;
+    font-weight: normal;
+    src: url('/f/ubuntu_condensed-regular.woff') format('woff');
+}
+@font-face
+{
+    font-family: 'Ubuntu';
+    font-style: normal;
+    font-weight: normal;
+    src: url('/f/ubuntu-regular.woff') format('woff');
+}
+@font-face
+{
+    font-family: 'Ubuntu';
+    font-style: normal;
+    font-weight: bold;
+    src: url('/f/ubuntu-bold.woff') format('woff');
+}

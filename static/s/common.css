@@ -1,0 +1,301 @@
+/* reset */
+*,
+*:before,
+*:after
+{
+  box-sizing: border-box; /* unify elements with form controls */
+  -moz-box-sizing: border-box; /* IE8 has it, but FF doesn't */
+  margin: 0px; /* tight pants */
+  padding: 0px;
+  border: 0px;
+  outline: 0px;
+  font-style: normal; /* italics? really? */
+  background-position: center center; /* who uses background for tiling these days? */
+  background-repeat: no-repeat;
+  vertical-align: inherit;
+}
+html
+{
+  width: 100%; /* Firefox is new IE */
+  height: 100%;
+}
+body
+{
+  min-width: 100%;
+  min-height: 100%;
+}
+
+/* app */
+body
+{
+  font-family: "Ubuntu Condensed", sans-serif;
+}
+
+.timer
+{
+  position: fixed;
+  display: block;
+  top: 2%;
+  left: 2%;
+  right: 22%;
+  width: auto;
+  height: 40px;
+outline: 1px solid #ffff00;
+}
+.scoreboard
+{
+  position: fixed;
+  display: block;
+  top: calc(4% + 40px);
+  left: 2%;
+  right: 22%;
+  bottom: 24%;
+  width: auto;
+  height: auto;
+outline: 1px solid #00ff00;
+}
+.answer
+{
+  position: fixed;
+  display: block;
+  left: 2%;
+  right: 22%;
+  bottom: 2%;
+  width: auto;
+  height: 20%;
+outline: 1px solid #0000ff;
+}
+.log
+{
+  position: absolute;
+  display: block;
+  top: 0px;
+  right: 0px;
+  width: 20%;
+  min-height: 100%;
+  height: auto;
+  padding: 2% 2% calc(4% + 85px) 2%;
+  font-family: "Ubuntu", sans-serif;
+  font-size: 12px;
+  color: #777777;
+  border-left: 1px solid #cccccc;
+  z-index: 0;
+}
+.log:before,
+.log:after
+{
+  content: "";
+  position: fixed;
+  display: block;
+  right: 0px;
+  width: 20%;
+  height: 4%;
+  z-index: 1;
+  pointer-events: none;
+}
+.log:before
+{
+  top: 0px;
+  background-image: -webkit-linear-gradient(top, rgba(255,255,255, 1), rgba(255, 255, 255, 1) 35%, rgba(255, 255, 255, 0.9) 50%, rgba(255, 255, 255, 0) 90%);
+  background-image: -moz-linear-gradient(top, rgba(255,255,255, 1), rgba(255, 255, 255, 1) 35%, rgba(255, 255, 255, 0.9) 50%, rgba(255, 255, 255, 0) 90%);
+  background-image: linear-gradient(top, rgba(255,255,255, 1), rgba(255, 255, 255, 1) 35%, rgba(255, 255, 255, 0.9) 50%, rgba(255, 255, 255, 0) 90%);
+}
+.log:after
+{
+  bottom: calc(80px + 2%);
+  background-image: -webkit-linear-gradient(bottom, rgba(255,255,255, 1), rgba(255, 255, 255, 1) 35%, rgba(255, 255, 255, 0.9) 50%, rgba(255, 255, 255, 0) 100%);
+  background-image: -moz-linear-gradient(bottom, rgba(255,255,255, 1), rgba(255, 255, 255, 1) 35%, rgba(255, 255, 255, 0.9) 50%, rgba(255, 255, 255, 0) 100%);
+  background-image: linear-gradient(bottom, rgba(255,255,255, 1), rgba(255, 255, 255, 1) 35%, rgba(255, 255, 255, 0.9) 50%, rgba(255, 255, 255, 0) 100%);
+}
+
+/* chat messages */
+
+.chat_message
+{
+  display: block;
+  width: 100%;
+  padding: 10px 0px 0px;
+  overflow: hidden;
+}
+.chat_message_user
+{
+  display: block;
+  color: #cccccc;
+}
+.chat_message_text
+{
+  position: relative;
+  display: block;
+  min-height: 25px;
+  padding: 5px;
+  border: 1px solid #e0e0e0;
+  border-radius: 4px;
+  background-color: #f9f9f9;
+  white-space: pre-line;
+  z-index: 0;
+}
+  .chat_message_user + .chat_message_text
+  {
+    margin-top: 6px;
+  }
+.chat_message_text:before
+{
+  content: "";
+  position: absolute;
+  display: block;
+  left: 6px;
+  top: -3px;
+  width: 6px;
+  height: 6px;
+  background-color: #f9f9f9;
+  box-shadow: 1px 1px 0px #e0e0e0;
+  -webkit-transform: rotate(-135deg);
+  -moz-transform: rotate(-135deg);
+  transform: rotate(-135deg);
+  z-index: -1;
+}
+  .chat_message_mine .chat_message_text,
+  .chat_message_mine .chat_message_text:before
+  {
+    color: #aaaaaa;
+    background-color: #ffffff;
+  }
+
+
+/* special treatment */
+
+.chat_message_status,
+.chat_message_error
+{
+  padding: 5px 0px 0px;
+}
+.chat_message_status .chat_message_text,
+.chat_message_error .chat_message_text
+{
+  min-height: 15px;
+  margin-top: 5px;
+  padding: 0px;
+  border: none;
+  color: #cccccc;
+  background-color: transparent;
+}
+.chat_message_status .chat_message_text:before,
+.chat_message_error .chat_message_text:before
+{
+  content: none;
+}
+
+
+/* chat text panel */
+.chat
+{
+  position: fixed;
+  bottom: 0px;
+  right: 0px;
+  width: 20%;
+  height: calc(80px + 2%);
+  padding: 0px 2% 2%;
+  font-family: "Ubuntu", sans-serif;
+  font-size: 10px;
+  text-align: right;
+  background-color: #ffffff;
+}
+.chat_messagebox
+{
+  width: 100%;
+  height: 80%;
+  padding: 5px;
+  font-size: 12px;
+  text-align: left;
+  border: 1px solid #cccccc;
+  border-radius: 4px 4px 0px 4px;
+  resize: none;
+}
+.chat_messagebox_send
+{
+  position: relative;
+  display: inline-block;
+  width: 98px;
+  margin-top: -2px;
+  padding: 5px 10px;
+  color: #555555;
+  border: 1px solid #cccccc;
+  border-radius: 0px 0px 4px 4px;
+  background-color: #f4f4f4;
+  background-image: -webkit-linear-gradient(top, #fcfcfc, #f4f4f4);
+  background-image: linear-gradient(top, #fcfcfc, #f4f4f4);
+  background-position: 0px 0px;
+  text-align: center;
+  white-space: nowrap;
+  cursor: pointer;
+}
+  .chat_messagebox_send:hover
+  {
+    color: #222222;
+    background-color: #e9e9e9;
+    background-image: -webkit-linear-gradient(top, #f1f1f1, #e9e9e9);
+    background-image: linear-gradient(top, #f1f1f1, #e9e9e9);
+  }
+.chat_messagebox_hotkey
+{
+  position: absolute;
+  left: 10%;
+  right: calc(10% + 102px);
+  width: auto;
+  margin-top: 6px;
+  color: #999999;
+  text-align: right;
+}
+
+/* user join panel */
+
+.user
+{
+  position: fixed;
+  bottom: 0px;
+  right: 0px;
+  width: 20%;
+  height: calc(80px + 2%);
+  padding: 0px 2% 2%;
+  font-family: "Ubuntu", sans-serif;
+  font-size: 10px;
+  text-align: center;
+  background-color: #ffffff;
+}
+
+.user_nickname
+{
+  width: 100%;
+  height: 30px;
+  padding: 5px;
+  font-size: 12px;
+  text-align: left;
+  border: 1px solid #cccccc;
+  border-radius: 4px 4px 0px 4px;
+  resize: none;
+}
+.user_join
+{
+  position: relative;
+  display: inline-block;
+  width: 100%;
+  margin-top: -2px;
+  padding: 5px 10px;
+  color: #555555;
+  border: 1px solid #cccccc;
+  border-radius: 0px 0px 4px 4px;
+  background-color: #f4f4f4;
+  background-image: -webkit-linear-gradient(top, #fcfcfc, #f4f4f4);
+  background-image: linear-gradient(top, #fcfcfc, #f4f4f4);
+  background-position: 0px 0px;
+  text-align: center;
+  white-space: nowrap;
+  cursor: pointer;
+}
+  .user_join:hover
+  {
+    color: #222222;
+    background-color: #e9e9e9;
+    background-image: -webkit-linear-gradient(top, #f1f1f1, #e9e9e9);
+    background-image: linear-gradient(top, #f1f1f1, #e9e9e9);
+  }
