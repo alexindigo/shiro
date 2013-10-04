@@ -6,7 +6,6 @@
   "dependencies": {
     "deeply": "~0.1.0",
     "ender-js": "~0.5.0",
-    "engine.io": "git://github.com/alexindigo/engine.io",
     "async": "~0.2.9",
     "jeesh": "~0.0.6",
     "envar": "~1.0.0",

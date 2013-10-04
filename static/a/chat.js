@@ -197,7 +197,6 @@ Chat.prototype._logged = function Chat__logged(user)
   this._toggleUserPanel(false);
 }
 
-
 // adds platform specific shortcut to the textbox (mac: Cmd+Enter or otherwise:Ctrl+Enter)
 Chat.prototype._addTextboxShortcut = function Chat__addTextboxShortcut()
 {

@@ -18,9 +18,10 @@ var server   = require('http').createServer()
 
   // default settings
   , defaults =
-    { port   : 8500
-    , path   : 'static'
-    , data   : 'data'
+    { port : 8500
+    , path : 'static'
+    , data : 'data'
+    , admin: 'assword' // admin password
     }
 
   // params handling
@@ -50,7 +51,6 @@ serverOptions =
   },
   websockets:
   {
-//    transformer  : 'engine.io',
     transformer  : 'socket.io',
     clientLibrary: path.join(staticPath, 'a/primus.js')
   }
@@ -126,19 +126,22 @@ function connectDb(callback)
     // get chat data
     chat: function(asyncCb)
     {
-      chat = new Chat({storage: path.join(dataPath, 'chat.db')});
+      chat = new Chat({env: envar, storage: path.join(dataPath, 'chat.db')});
       chat.init(asyncCb);
     },
 
     // get game data
     game: function(asyncCb)
     {
-      game = new Game({storage: path.join(dataPath, 'game.db')});
+      game = new Game({env: envar, storage: path.join(dataPath, 'game.db')});
       game.init(asyncCb);
     }
   }, function(err)
   {
     if (err) return callback(err);
+
+    // game should be able control chat
+    game.attach({chat: chat});
 
     callback(null);
   });
