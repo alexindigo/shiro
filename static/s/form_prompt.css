@@ -1,0 +1,100 @@
+.formprompt
+{
+  position: fixed;
+  display: block;
+  top: 0px;
+  right: 0px;
+  bottom: 0px;
+  left: 0px;
+  width: auto;
+  height: auto;
+  text-align: center;
+}
+
+.formprompt:before
+{
+  content: "";
+  display: inline-block;
+  width: 0px;
+  height: 100%;
+  vertical-align: middle;
+}
+
+.formprompt_prompt
+{
+  display: inline-block;
+  padding: 20px 50px;
+  color: #555555;
+  border: 1px solid #eeeeee;
+  border-radius: 4px;
+  background-color: #ffffff;
+  box-shadow: 2px 2px 5px #cccccc;
+  vertical-align: middle;
+}
+
+.formprompt_title
+{
+  margin-bottom: 30px;
+  line-height: 34px;
+  font-size: 20px;
+}
+
+/* fields */
+
+.formprompt_field
+{
+  display: block;
+  width: 300px;
+  margin: 5px 0px;
+  line-height: 34px;
+  font-size: 16px;
+  color: #999999;
+  text-align: right;
+}
+.formprompt_field>input[type=text],
+.formprompt_field>input[type=password]
+{
+  width: 200px;
+  height: 34px;
+  margin-left: 10px;
+  font-size: 16px;
+  border: 1px solid #cccccc;
+  border-radius: 4px;
+  text-align: center;
+}
+
+/* controls */
+
+.formprompt_controls
+{
+  margin-top: 30px;
+}
+
+.formprompt_control
+{
+  margin: 0px 10px;
+  padding: 8px 15px;
+  font-size: 16px;
+  color: #cccccc;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  background-color: #ffffff;
+  cursor: pointer;
+}
+  .formprompt_control:hover
+  {
+    color: #333333;
+    border-color: #999999;
+  }
+
+  /* default: most right item */
+  .formprompt_control:last-child
+  {
+    color: #999999;
+    border-color: #dddddd;
+  }
+    .formprompt_control:last-child:hover
+    {
+      color: #333333;
+      border-color: #999999;
+    }

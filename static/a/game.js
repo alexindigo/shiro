@@ -4,16 +4,27 @@
 function Game(options)
 {
   this.scoreboard = typeof options.scoreboard == 'string' ? $(options.scoreboard) : options.scoreboard;
+  this.teamsList  = typeof options.teamsList == 'string' ? $(options.teamsList) : options.teamsList;
   this.timer      = typeof options.timer == 'string' ? $(options.timer) : options.timer;
   this.question   = typeof options.question == 'string' ? $(options.question) : options.question;
 
   // game play type
-  this.type   = options.type;
+  this.type   = options.type || 'game';
 
   // websockets
   this.socket = options.transport;
   // d3
   this.d3     = options.d3;
+  // chat (optional)
+  this._chat  = options.chat;
+
+  // container
+  this._container = this.d3.select(this.teamsList[0]);
+  // drawing function
+  this._drawTeam = $.partial(this._drawTeamStub, this);
+
+  // teams storage
+  this.teams = [];
 
   // init
   this.init();
@@ -31,7 +42,7 @@ Game.prototype.init = function Game_init()
     _game.socket.write({ helo: _game.type });
   });
 
-  // check the user
+  // events come from data
   this.socket.on('data', function primus_onData(data)
   {
     // [game] welcome message
@@ -44,22 +55,45 @@ Game.prototype.init = function Game_init()
         _game.instance(data.game.instance);
         _game.user(undefined);
       }
+
+      _game.setTeams(data.game.teams);
     }
 
     // [game:error]
     if (data['game:error'])
     {
-//      _game.answer.append('<p>Error: '+data.error.message+'</p>');
+      if (_game._chat)
+      {
+        _game._chat.addSystemMessage('Error: '+data['game:error'].err.message+'.', 'error');
+      }
     }
 
-    // [game:logged]
-    if (data['game:logged'])
+    // [game:team_added]
+    if (data['game:team_added'])
     {
-      _game._logged(data['game:logged']);
+      _game.addTeam(data['game:team_added']);
+    }
+
+    // [game:team_updated]
+    if (data['game:team_updated'])
+    {
+      _game.updateTeam(data['game:team_updated']);
+    }
+
+    // [game:team_deleted]
+    if (data['game:team_deleted'])
+    {
+      _game.deleteTeam(data['game:team_deleted']);
     }
 
     console.log('game', data);
   });
+
+  // extra post init
+  if (typeof this._postInit == 'function')
+  {
+    this._postInit();
+  }
 
 }
 
@@ -85,66 +119,91 @@ Game.prototype.instance = function Game_instance(value)
   return $.cookie('game:instance');
 }
 
-// --- demi-private methods
-
-// handle logged event
-Game.prototype._logged = function Game__logged(user)
+Game.prototype.addTeam = function Game_addTeam(team)
 {
-  this.user(user);
-  this._toggleAuthModal(false);
+  this.teams.push(team);
+
+  this._renderTeams();
 }
 
-// toggles auth modal on/off
-// on by default
-Game.prototype._toggleAuthModal = function Game__toggleAuthModal(show)
+Game.prototype.updateTeam = function Game_updateTeam(team)
+{
+  // merge in updated team data
+  this.teams = $.each(this.teams, function(t){ if (t.login == team.login) { $.merge(t, team); } });
+
+  this._renderTeams();
+}
+
+Game.prototype.deleteTeam = function Game_deleteTeam(team)
 {
   var _game = this;
 
-return;
+  // find and kill
+  $.find(this.teams, function(t, i){ if (t.login == team.login) { _game.teams.splice(i, 1); } });
 
-  // if (arguments.length < 1)
-  // {
-  //   show = true;
-  // }
+  this._renderTeams();
+}
 
-  // if (show)
-  // {
-  //   this.userPanel.removeAttr('hidden');
+Game.prototype.setTeams = function Game_setTeams(teams)
+{
+  this.teams = teams;
+  this._renderTeams();
+}
 
-  //   // add event listeners
+// --- demi-private methods
 
-  //   // enter in the input field
-  //   this.nicknameBox.on('keydown', function(e)
-  //   {
-  //     var nickname;
-  //     if ( e.which == 13 && (nickname = this.value.trim()) )
-  //     {
-  //       e.preventDefault();
-  //       _chat.join(nickname);
-  //       return false;
-  //     }
-  //   });
+Game.prototype._renderTeams = function Game__renderTeams()
+{
+  var item;
 
-  //   // click on the join button
-  //   this.userJoinButton.on('click', function(e)
-  //   {
-  //     var nickname;
+  item = this._container.selectAll('.scoreboard_team')
+    .data(this.teams, function(d){ return d.login; })
+    .sort(this._sortTeams)
+    .each(this._drawTeam)
+    ;
 
-  //     e.preventDefault();
+  item.enter().append('span')
+    .sort(this._sortTeams)
+    .each(this._drawTeam)
+    ;
 
-  //     if (nickname = _chat.nicknameBox.val().trim())
-  //     {
-  //       _chat.join(nickname);
-  //       return false;
-  //     }
-  //   });
-  // }
-  // else
-  // {
-  //   this.userPanel.attr('hidden', true);
+  item.exit()
+    .remove()
+    ;
+}
 
-  //   // remove event listeners
-  //   this.nicknameBox.off();
-  //   this.userJoinButton.off();
-  // }
+Game.prototype._drawTeamStub = function Game__drawTeamStub(_game, d)
+{
+  // this here is a DOM element
+  var el   = _game.d3.select(this)
+    , isMe = (_game.user() && d.login == _game.user().login)
+    , html = '';
+    ;
+
+  html += '<span class="scoreboard_team_name">'+d.name+'</span>';
+  html += '<span class="scoreboard_team_points">'+d.points+'</span>';
+
+  el
+    .classed('scoreboard_team', true)
+    .classed('scoreboard_team_mine', isMe)
+    .attr('id', 'scoreboard_team_'+d.login)
+    .html(html);
+}
+
+Game.prototype._sortTeams = function Game__sortTeams(a, b)
+{
+  var comp = 0;
+
+  // check points first
+  if ((comp = a.points - b.points) == 0)
+  {
+    // check time_spent
+    if ((comp = (a.time_spent - b.time_spent) * -1) == 0)
+    {
+      // check names
+      comp = (a.name < b.name ? -1 : (a.name > b.name ? 1 : 0));
+    }
+  }
+console.log(['sort', a.name, b.name, comp]);
+  return comp;
 }

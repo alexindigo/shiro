@@ -315,7 +315,7 @@ Chat.prototype._userNicknameHandle = function Chat__userNicknameHandle()
   }
 }
 
-Chat.prototype._renderMessages = function Chat__renderMessages(messages)
+Chat.prototype._renderMessages = function Chat__renderMessages()
 {
   var item;
 
@@ -351,9 +351,10 @@ Chat.prototype._drawMessageStub = function Chat__drawMessageStub(_chat, d)
   // this here is a DOM element
   var el   = _chat.d3.select(this)
     , isMe = (_chat.user() && d.user == _chat.user().nickname)
+    , html
     ;
 
-  var html = '<span class="chat_message_text">'+d.text+'</span>';
+  html = '<span class="chat_message_text">'+d.text+'</span>';
 
   if (d.user && _chat._lastDrawnUser != d.user)
   {

@@ -1,0 +1,25 @@
+.modal_is_modal
+{
+  z-index: 11;
+}
+.modal_cover
+{
+  position: fixed;
+  display: block;
+  top: 0px;
+  right: 0px;
+  bottom: 0px;
+  left: 0px;
+  width: auto;
+  height: auto;
+  background-color: #f8f8f8;
+  opacity: 0.8;
+  /* this should cover everything, otherwise other party should be refactored */
+  z-index: 10;
+}
+
+/* being real modal and prevent blocked content scrolling */
+body.modal_under_modal
+{
+  overflow: hidden;
+}

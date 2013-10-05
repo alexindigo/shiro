@@ -3,14 +3,14 @@
 <head>
  <meta charset="utf-8">
  <title>Fukuro &bull; Admin</title>
- <link rel="stylesheet" href="/s/fonts.css">
- <link rel="stylesheet" href="/s/common.css">
+ <link rel="stylesheet" href="/s/_main.css">
+ <link rel="stylesheet" href="/s/_admin.css">
 </head>
 
 <body>
 
 <div class="timer"></div>
-<div class="scoreboard"></div>
+<div class="scoreboard"><div class="scoreboard_teams"></div><span class="scoreboard_add_team"></span></div>
 <div class="question"></div>
 <div class="answer"></div>
 <div class="log"></div>
@@ -25,39 +25,26 @@
   <button class="user_join">Join chat</button>
 </div>
 
+<!-- templates storage -->
+<div hidden class="templates_storage">
+
+
+
+</div>
 
 <script src="/a/ender.min.js"></script>
 <script src="/a/d3.v3.min.js"></script>
 <script src="/a/primus.js"></script>
+<script src="/a/modal.js"></script>
+<script src="/a/form_prompt.js"></script>
 <script src="/a/chat.js"></script>
 <script src="/a/game.js"></script>
+<script src="/a/common.js"></script>
+<script src="/a/_team.js"></script>
+<script src="/a/_admin.js"></script>
 <script>
 
-var primus = new Primus();
-
-var chat = new Chat(
-    { d3            : d3
-    , transport     : primus
-    , messageList   : '.log'
-    , messageBox    : '.chat_messagebox'
-    , submitButton  : '.chat_messagebox_send'
-    , hotkeyMod     : '.chat_messagebox_hotkey_mod'
-    , userPanel     : '.user'
-    , nicknameBox   : '.user_nickname'
-    , userJoinButton: '.user_join'
-    })
-  ;
-
-var game = new Game(
-    { type      : 'admin'
-    , d3        : d3
-    , transport : primus
-    , scoreboard: '.scoreboard'
-    , timer     : '.timer'
-    , question  : '.question'
-    , answer    : '.answer'
-    })
-  ;
+var gameType = 'admin';
 
 </script>
 </body>

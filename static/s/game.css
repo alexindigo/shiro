@@ -1,0 +1,82 @@
+/* timer panel */
+
+.timer
+{
+  position: fixed;
+  display: block;
+  top: 2%;
+  left: 2%;
+  right: 22%;
+  width: auto;
+  height: 40px;
+outline: 1px solid #ffff00;
+}
+
+/* scoreboard */
+
+.scoreboard
+{
+  position: fixed;
+  display: block;
+  top: calc(4% + 40px);
+  left: 2%;
+  right: 22%;
+  bottom: 24%;
+  width: auto;
+  height: auto;
+  padding: 5%;
+  text-align: center;
+outline: 1px solid #00ff00;
+}
+.scoreboard:before
+{
+  content: "";
+  display: inline-block;
+  width: 0px;
+  height: 100%;
+  vertical-align: middle;
+}
+
+.scoreboard_teams
+{
+  position: relative;
+  display: inline-block;
+  width: auto;
+  height: auto;
+  vertical-align: middle;
+}
+
+.scoreboard_team
+{
+  position: relative;
+  display: inline-block;
+  margin: 10px 15px;
+}
+
+.scoreboard_team_name,
+.scoreboard_team_points
+{
+  display: block;
+  min-width: 150px;
+  line-height: 34px;
+  font-size: 20px;
+}
+.scoreboard_team_name
+{
+  border-bottom: 1px solid #cccccc;
+}
+
+
+/* answer section */
+
+.answer
+{
+  position: fixed;
+  display: block;
+  left: 2%;
+  right: 22%;
+  bottom: 2%;
+  width: auto;
+  height: 20%;
+outline: 1px solid #0000ff;
+}

@@ -3,14 +3,13 @@
 <head>
  <meta charset="utf-8">
  <title>Fukuro</title>
- <link rel="stylesheet" href="/s/fonts.css">
- <link rel="stylesheet" href="/s/common.css">
+ <link rel="stylesheet" href="/s/_main.css">
 </head>
 
 <body>
 
 <div class="timer"></div>
-<div class="scoreboard"></div>
+<div class="scoreboard"><div class="scoreboard_teams"></div></div>
 <div class="question"></div>
 <div class="answer"></div>
 <div class="log"></div>
@@ -31,34 +30,6 @@
 <script src="/a/primus.js"></script>
 <script src="/a/chat.js"></script>
 <script src="/a/game.js"></script>
-<script>
-
-var primus = new Primus();
-
-var chat = new Chat(
-    { d3            : d3
-    , transport     : primus
-    , messageList   : '.log'
-    , messageBox    : '.chat_messagebox'
-    , submitButton  : '.chat_messagebox_send'
-    , hotkeyMod     : '.chat_messagebox_hotkey_mod'
-    , userPanel     : '.user'
-    , nicknameBox   : '.user_nickname'
-    , userJoinButton: '.user_join'
-    })
-  ;
-
-var game = new Game(
-    { type      : 'game'
-    , d3        : d3
-    , transport : primus
-    , scoreboard: '.scoreboard'
-    , timer     : '.timer'
-    , question  : '.question'
-    , answer    : '.answer'
-    })
-  ;
-
-</script>
+<script src="/a/common.js"></script>
 </body>
 </html>
