@@ -156,14 +156,17 @@ Game.prototype._renderTeams = function Game__renderTeams()
 {
   var item;
 
+  // sort
+  this.teams.sort(this._sortTeams);
+
   item = this._container.selectAll('.scoreboard_team')
-    .data(this.teams, function(d){ return d.login; })
-    .sort(this._sortTeams)
+    .data(this.teams)
+    .order()
     .each(this._drawTeam)
     ;
 
   item.enter().append('span')
-    .sort(this._sortTeams)
+    .order()
     .each(this._drawTeam)
     ;
 
@@ -204,6 +207,6 @@ Game.prototype._sortTeams = function Game__sortTeams(a, b)
       comp = (a.name < b.name ? -1 : (a.name > b.name ? 1 : 0));
     }
   }
-console.log(['sort', a.name, b.name, comp]);
+
   return comp;
 }
