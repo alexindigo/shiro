@@ -53,7 +53,7 @@ Game.prototype.init = function Game_init()
       if (_game.instance() != data.game.instance)
       {
         _game.instance(data.game.instance);
-        _game.user(undefined);
+        _game.user(false);
       }
 
       _game.setTeams(data.game.teams);
@@ -119,6 +119,11 @@ Game.prototype.instance = function Game_instance(value)
   return $.cookie('game:instance');
 }
 
+Game.prototype.getTeam = function Game_getTeam(handle)
+{
+  return $.find(this.teams, {login: handle});
+}
+
 Game.prototype.addTeam = function Game_addTeam(team)
 {
   this.teams.push(team);
@@ -139,7 +144,7 @@ Game.prototype.deleteTeam = function Game_deleteTeam(team)
   var _game = this;
 
   // find and kill
-  $.find(this.teams, function(t, i){ if (t.login == team.login) { _game.teams.splice(i, 1); } });
+  $.find(this.teams, function(t, i){ if (t.login == team.login) { _game.teams.splice(i, 1); return true; } });
 
   this._renderTeams();
 }
@@ -198,10 +203,10 @@ Game.prototype._sortTeams = function Game__sortTeams(a, b)
   var comp = 0;
 
   // check points first
-  if ((comp = a.points - b.points) == 0)
+  if ((comp = b.points - a.points) == 0)
   {
     // check time_spent
-    if ((comp = (a.time_spent - b.time_spent) * -1) == 0)
+    if ((comp = b.time_spent - a.time_spent) == 0)
     {
       // check names
       comp = (a.name < b.name ? -1 : (a.name > b.name ? 1 : 0));

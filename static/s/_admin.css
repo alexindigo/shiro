@@ -21,3 +21,49 @@
 {
   content: "add new team";
 }
+
+.scoreboard_team_controls
+{
+  display: none;
+
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  width: 35px;
+  height: 70px;
+}
+  .scoreboard_team:hover .scoreboard_team_controls
+  {
+    display: block;
+  }
+.scoreboard_edit_team,
+.scoreboard_delete_team
+{
+  display: inline-block;
+  width: 35px;
+  height: 35px;
+  cursor: pointer;
+}
+.scoreboard_edit_team:before,
+.scoreboard_delete_team:before
+{
+  display: inline-block;
+  width: 35px;
+  line-height: 35px;
+  font-size: 10px;
+  text-align: left;
+  color: #cccccc;
+}
+  .scoreboard_edit_team:hover:before,
+  .scoreboard_delete_team:hover:before
+  {
+    color: #444444;
+  }
+.scoreboard_edit_team:before
+{
+  content: "edit";
+}
+.scoreboard_delete_team:before
+{
+  content: "delete";
+}

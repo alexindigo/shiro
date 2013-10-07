@@ -5,14 +5,14 @@ function FormPrompt(options)
 {
   options = options || {};
 
-  this.title    = options.title;
-  this.fields   = options.fields;
-  this.controls = options.controls;
+  this._title    = options.title;
+  this._fields   = options.fields;
+  this._controls = options.controls;
 
   this.sticky   = options.sticky || false;
 
   // some defaults
-  this.classPrefix = 'formprompt';
+  this._classPrefix = 'formprompt';
 
   // state
   this.active = false;
@@ -20,6 +20,37 @@ function FormPrompt(options)
   this._init();
 }
 
+FormPrompt.prototype.title = function FormPrompt_title(title)
+{
+  if (arguments.length > 0)
+  {
+    this.containerTitle.html(this._title = title);
+  }
+
+  return this._title;
+}
+
+FormPrompt.prototype.data = function FormPrompt_data(data)
+{
+  var classField   = [this._classPrefix, 'field'].join('_')
+    , classFieldRE = new RegExp('\\b' + classField + '_([\\w_]+)\\b')
+    ;
+
+  if (typeof data == 'object')
+  {
+    this.containerFields.children().each(function(field)
+    {
+      var match;
+
+      if ((match = field.className.match(classFieldRE)) && (match[1] in data))
+      {
+        $('input', field)[0].value = data[match[1]];
+      }
+    });
+  }
+
+  return this;
+}
 
 FormPrompt.prototype.activate = function FormPrompt_activate(callback)
 {
@@ -95,30 +126,30 @@ FormPrompt.prototype._init = function FormPrompt__init()
     ;
 
   // create form container and fields
-  this.container = $('<div class="'+this.classPrefix+'"></div>');
-  this.prompt = $('<div class="'+[this.classPrefix, 'prompt'].join('_')+'"></div>').appendTo(this.container);
+  this.container = $('<div class="'+this._classPrefix+'"></div>');
+  this.prompt = $('<div class="'+[this._classPrefix, 'prompt'].join('_')+'"></div>').appendTo(this.container);
 
   // add title
-  if (this.title)
-  {
-    this.prompt.append('<h2 class="'+[this.classPrefix, 'title'].join('_')+'">'+this.title+'</h2>');
-  }
+  this.containerTitle = $('<h2 class="'+[this._classPrefix, 'title'].join('_')+'">'+(this._title || '')+'</h2>').appendTo(this.prompt);
 
   // add sub containers
-  this.containerFields   = $('<div class="'+[this.classPrefix, 'fields'].join('_')+'"></div>').appendTo(this.prompt);
-  this.containerControls = $('<div class="'+[this.classPrefix, 'controls'].join('_')+'"></div>').appendTo(this.prompt);
+  this.containerFields   = $('<div class="'+[this._classPrefix, 'fields'].join('_')+'"></div>').appendTo(this.prompt);
+  this.containerControls = $('<div class="'+[this._classPrefix, 'controls'].join('_')+'"></div>').appendTo(this.prompt);
 
   // add fields
-  for (i=0; i<this.fields.length; i++)
+  if (this._fields)
   {
-    this.containerFields.append(this._makeField(this.fields[i]));
+    for (i=0; i<this._fields.length; i++)
+    {
+      this.containerFields.append(this._makeField(this._fields[i]));
+    }
   }
 
   // add controls
-  for (i=0; i<this.controls.length; i++)
+  for (i=0; i<this._controls.length; i++)
   {
     // controls go right to left
-    this.containerControls.prepend(this._makeControl(this.controls[i]));
+    this.containerControls.prepend(this._makeControl(this._controls[i]));
   }
 
   // add event handlers
@@ -139,16 +170,16 @@ FormPrompt.prototype._init = function FormPrompt__init()
 // creates field
 FormPrompt.prototype._makeField = function FormPrompt__makeField(field)
 {
-  var classes = [ [this.classPrefix, 'field'].join('_') , [this.classPrefix, 'field', field.name].join('_') ].join(' ')
+  var classes = [ [this._classPrefix, 'field'].join('_') , [this._classPrefix, 'field', field.name].join('_') ].join(' ')
     ;
 
-  return $('<label class="'+classes+'">'+field.title+'<input type="'+(field.type || 'text')+'" name="'+field.name+'" value="'+(('value' in field) ? field.value : '')+'"></label>');
+  return $('<label class="'+classes+'">'+field.title+'<input type="'+(field.type || 'text')+'" name="'+field.name+'" value="'+(('value' in field) ? field.value : '')+'"'+(field.readonly ? ' readonly' : '')+'></label>');
 }
 
 // creates control
 FormPrompt.prototype._makeControl = function FormPrompt__makeControl(control)
 {
-  var classes = [ [this.classPrefix, 'control'].join('_') , [this.classPrefix, 'control', control.action].join('_') ].join(' ')
+  var classes = [ [this._classPrefix, 'control'].join('_') , [this._classPrefix, 'control', control.action].join('_') ].join(' ')
     ;
 
   return $('<button class="'+classes+'" data-action="'+control.action+'">'+control.title+'</button>');

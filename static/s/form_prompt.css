@@ -37,6 +37,12 @@
   margin-bottom: 30px;
   line-height: 34px;
   font-size: 20px;
+  vertical-align: baseline;
+}
+
+.formprompt_title>i
+{
+  font-family: 'Ubuntu Mono';
 }
 
 /* fields */
@@ -61,6 +67,11 @@
   border: 1px solid #cccccc;
   border-radius: 4px;
   text-align: center;
+}
+.formprompt_field>input[type=text][readonly],
+.formprompt_field>input[type=password][readonly]
+{
+  color: #999999;
 }
 
 /* controls */

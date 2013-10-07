@@ -58,7 +58,7 @@ Chat.prototype.init = function Chat_init()
       if (_chat.instance() != data.chat.instance)
       {
         _chat.instance(data.chat.instance);
-        _chat.user(undefined);
+        _chat.user(false);
       }
 
       // check for user
@@ -83,7 +83,7 @@ Chat.prototype.init = function Chat_init()
       {
         // handle login errors
         case 'login':
-          _chat.user(undefined);
+          _chat.user(false);
           _chat._toggleUserPanel();
           break;
       }
@@ -352,14 +352,20 @@ Chat.prototype._drawMessageStub = function Chat__drawMessageStub(_chat, d)
   var el   = _chat.d3.select(this)
     , isMe = (_chat.user() && d.user == _chat.user().nickname)
     , html
+    , match
     ;
+
+  if (d.type == 'status')
+  {
+    d.text = _chat._replaceUserName(d.text);
+  }
 
   html = '<span class="chat_message_text">'+d.text+'</span>';
 
   if (d.user && _chat._lastDrawnUser != d.user)
   {
     _chat._lastDrawnUser = d.user;
-    html = '<span class="chat_message_user">'+(isMe ? 'me' : d.user)+'</span>' + html;
+    html = '<span class="chat_message_user">'+(isMe ? 'me' : _chat._translateUser(d.user))+'</span>' + html;
   }
   else if (!d.user) // system message
   {
@@ -375,4 +381,30 @@ Chat.prototype._drawMessageStub = function Chat__drawMessageStub(_chat, d)
     .html(html);
 }
 
+Chat.prototype._replaceUserName = function Chat__replaceUserName(str)
+{
+  var _chat = this;
 
+  str = str.replace(/User (\b[\w_]+\b)/, function(match, name)
+  {
+    return _chat._translateUser(name);
+  });
+
+  return str;
+}
+
+Chat.prototype._translateUser = function Chat__translateUser(name)
+{
+  var match;
+
+  if (name == '_admin_admin')
+  {
+    name = 'Game Host';
+  }
+  else if (match = name.match(/^_team_([\w_]+)$/))
+  {
+    name = 'Team '+match[1];
+  }
+
+  return name;
+}
