@@ -27,6 +27,16 @@ Game.prototype._postInit = function Game__postInit()
     {
       _game._logged(data['game:logged']);
     }
+
+    // [admin:error]
+    if (data['admin:error'])
+    {
+      if (_game._chat)
+      {
+        _game._chat.addSystemMessage('Error: '+data['admin:error'].err.message+'.', 'error');
+      }
+    }
+
   });
 
   // --- create auth prompt

@@ -36,7 +36,6 @@ function Chat(options)
 Chat.prototype.init = function Chat_init()
 {
   var _chat = this
-    , mod   = 'ctrlKey'
     , message
     ;
 
@@ -113,7 +112,6 @@ Chat.prototype.init = function Chat_init()
       _chat.addMessage(data['chat:message']);
     }
 
-    console.log('chat', data);
   });
 
   // spawn event listneres
@@ -202,18 +200,11 @@ Chat.prototype._addTextboxShortcut = function Chat__addTextboxShortcut()
 {
   var _chat = this;
 
-  // update platform depended stuff
-  if (navigator.userAgent.match(/\bMac OS X\b/))
-  {
-    mod = 'metaKey';
-    this.hotkeyMod.html('Cmd');
-  }
-
   // wait for Ctrl\Cmd+Enter to submit
   this.messageBox.on('keydown', function(e)
   {
     var _messageBox = this;
-    if ( e.which == 13 && e[mod] && (message = this.value.trim()) )
+    if ( e.which == 13 && !e.altKey && (message = this.value.trim()) )
     {
       e.preventDefault();
       _chat.submit(message, function(err)

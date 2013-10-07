@@ -10,26 +10,18 @@
 <body>
 
 <div class="timer"></div>
-<div class="scoreboard"><div class="scoreboard_teams"></div><span class="scoreboard_add_team"></span></div>
+<div class="scoreboard"><div class="scoreboard_teams"></div><span class="scoreboard_control scoreboard_add_team"></span></div>
 <div class="question"></div>
 <div class="answer"></div>
 <div class="log"></div>
 
 <div class="chat">
   <textarea class="chat_messagebox"></textarea>
-  <span class="chat_messagebox_hotkey">Press <i class="chat_messagebox_hotkey_mod">Ctrl</i>+Enter to</span>
-  <button class="chat_messagebox_send">Send message</button>
+  <button class="chat_control chat_messagebox_send">send message</button>
 </div>
-<div class="user" hidden>
-  <input class="user_nickname" type="text" placeholder="Nickname">
-  <button class="user_join">Join chat</button>
-</div>
-
-<!-- templates storage -->
-<div hidden class="templates_storage">
-
-
-
+<div class="chat_user" hidden>
+  <input class="chat_user_nickname" type="text" placeholder="Nickname">
+  <button class="chat_control user_join">join chat</button>
 </div>
 
 <script src="/a/ender.min.js"></script>
