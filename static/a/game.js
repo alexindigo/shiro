@@ -13,16 +13,21 @@ function Game(options)
 
   // websockets
   this.socket = options.transport;
-  // d3
+
+  // --- d3
   this.d3     = options.d3;
 
-  // container
+  // teams container
   this._container = this.d3.select(this.teamsList[0]);
-  // drawing function
+  // team drawing function
   this._drawTeam = $.partial(this._drawTeamStub, this);
 
-  // teams storage
-  this.teams = [];
+  // question drawing function
+  this._drawQuestion = $.partial(this._drawQuestionStub, this);
+
+  // --- current data storage
+  this.teams     = [];
+  this.questions = [];
 
   // init
   this.init();
@@ -55,6 +60,8 @@ Game.prototype.init = function Game_init()
       }
 
       _game.setTeams(data.game.teams);
+
+      _game.setQuestions(data.game.questions);
     }
 
     // [game:error]
@@ -82,6 +89,12 @@ Game.prototype.init = function Game_init()
     if (data['game:team_deleted'])
     {
       _game.deleteTeam(data['game:team_deleted']);
+    }
+
+    // [game:question_added]
+    if (data['game:question_added'])
+    {
+      _game.addQuestion(data['game:question_added']);
     }
 
     console.log('game', data);
@@ -165,6 +178,21 @@ Game.prototype.setTeams = function Game_setTeams(teams)
   this._renderTeams();
 }
 
+Game.prototype.addQuestion = function Game_addQuestion(question)
+{
+  this.questions.push(question);
+
+  this._renderQuestions();
+}
+
+
+Game.prototype.setQuestions = function Game_setQuestions(questions)
+{
+  this.questions = questions;
+  this._renderQuestions();
+}
+
+
 // --- demi-private methods
 
 Game.prototype._renderTeams = function Game__renderTeams()
@@ -206,6 +234,10 @@ Game.prototype._drawTeamStub = function Game__drawTeamStub(_game, d)
     .classed('scoreboard_team_mine', isMe)
     .attr('id', 'scoreboard_team_'+d.login)
     .html(html);
+}
+
+Game.prototype._drawQuestionStub = function Game__drawQuestionStub(_game, d)
+{
 }
 
 Game.prototype._sortTeams = function Game__sortTeams(a, b)

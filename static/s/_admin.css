@@ -1,7 +1,66 @@
+/* --- gameplay */
+
+.gameplay
+{
+  position: fixed;
+  display: block;
+  top: 2%;
+  left: 2%;
+  right: 22%;
+  width: auto;
+  height: 40px;
+  text-align: center;
+outline: 1px solid #00ffff;
+}
+
+.gameplay_question
+{
+  position: relative;
+  display: inline-block;
+  width: 40px;
+  height: 40px;
+  line-height: 40px;
+  font-size: 20px;
+  color: #999999;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  background-color: #ffffff;
+  cursor: pointer;
+}
+  .gameplay_question.gameplay_question_played
+  {
+    color: #e8e8e8;
+  }
+  .gameplay_question:hover
+  {
+    color: #333333;
+    border-color: #999999;
+  }
+.gameplay_question:before
+{
+  content: "";
+  position: absolute;
+  display: block;
+  top: -10px;
+  left: 50%;
+  width: 6px;
+  height: 6px;
+  margin-left: -3px;
+  border-radius: 6px;
+  background-color: #33dd33;
+}
+  .gameplay_question.gameplay_question_played:before
+  {
+    content: none;
+  }
+
+/* --- scoreboard */
+
 .scoreboard_control
 {
   margin: 7px 10px 0px;
   padding: 5px 15px;
+  font-family: 'Ubuntu Condensed', sans-serif;
   font-size: 14px;
   color: #cccccc;
   border: 1px solid transparent;

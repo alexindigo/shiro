@@ -6,6 +6,16 @@ Game.prototype._postInit = function Game__postInit()
 {
   var _game = this;
 
+  // --- add extra containers
+
+  // global var – containerGameplay, set in admin.html
+  this.containerGameplay = typeof containerGameplay == 'string' ? $(containerGameplay) : containerGameplay;
+
+  // d3
+  this._gameplay = this.d3.select(this.containerGameplay[0]);
+  // drawing function
+  this._drawQuestion = $.partial(this._drawQuestionStub, this);
+
   // --- add extra events
 
   this.socket.on('data', function primus_onData(data)
@@ -258,6 +268,44 @@ Game.prototype._drawTeamStub = function Game__drawTeamStub(_game, d)
     .classed('scoreboard_team_mine', isMe)
     .attr('id', 'scoreboard_team_'+d.login)
     .html(html);
+}
+
+// Custom / admin specific _renderQuestions
+Game.prototype._renderQuestions = function Game__renderQuestions()
+{
+  var item;
+
+  // sort
+  this.questions = $.sortBy(this.questions, 'index');
+
+  item = this._gameplay.selectAll('.gameplay_question')
+    .data(this.questions)
+    .order()
+    .each(this._drawQuestion)
+    ;
+
+  item.enter().append('span')
+    .order()
+    .each(this._drawQuestion)
+    ;
+
+  item.exit()
+    .remove()
+    ;
+}
+
+Game.prototype._drawQuestionStub = function Game__drawQuestionStub(_game, d)
+{
+  // this here is a DOM element
+  var el   = _game.d3.select(this)
+    , html = '';
+    ;
+
+  el
+    .classed('gameplay_question', true)
+    .classed('gameplay_question_played', !!d.played)
+    .attr('id', 'gameplay_question_'+d.index)
+    .text(d.index);
 }
 
 // Object diff method
