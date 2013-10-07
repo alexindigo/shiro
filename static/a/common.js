@@ -1,6 +1,6 @@
 $.domReady(function()
 {
-  /* var */ primus = new Primus();
+  var primus = new Primus();
 
   var chat = new Chat(
       { d3            : d3
@@ -17,7 +17,6 @@ $.domReady(function()
 
   /*var*/ game = new Game(
       { type      : window.gameType
-      , chat      : chat
       , d3        : d3
       , transport : primus
       , scoreboard: '.scoreboard'
@@ -27,5 +26,10 @@ $.domReady(function()
       , answer    : '.answer'
       })
     ;
+
+  // add cross reference
+  chat.attach({game: game});
+
+  game.attach({chat: chat});
 });
 

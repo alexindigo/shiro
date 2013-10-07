@@ -65,9 +65,9 @@ Chat.prototype.init = function Chat_init()
 
       // check error code
       // only handle 403 for now
-      switch(data['chat:error'].err.code)
+      switch (data['chat:error'].err.code)
       {
-        case '403':
+        case 403:
           _chat._login();
           break;
       }
@@ -135,6 +135,16 @@ Chat.prototype.instance = function Chat_instance(value)
   }
 
   return $.cookie('chat:instance');
+}
+
+// Attaches reference to known external objects
+Chat.prototype.attach = function Chat_attach(collection)
+{
+  // so far it's only chat
+  if ('game' in collection)
+  {
+    this._game = collection['game'];
+  }
 }
 
 // --- more meaningful methods
@@ -403,15 +413,22 @@ Chat.prototype._replaceUserName = function Chat__replaceUserName(str)
 
 Chat.prototype._translateUser = function Chat__translateUser(name)
 {
-  var match;
+  var match
+    , team
+    ;
 
   if (name == '_admin_admin')
   {
-    name = 'Game Host';
+    name = '<b>Game Host</b>';
   }
   else if (match = name.match(/^_team_([\w_]+)$/))
   {
-    name = 'Team '+match[1];
+    if (this._game)
+    {
+      team = this._game.getTeam(match[1]);
+    }
+    // try it
+    name = 'Team <b>'+(team ? team.name : match[1])+'</b>';
   }
 
   return name;

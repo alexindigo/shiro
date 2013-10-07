@@ -15,8 +15,6 @@ function Game(options)
   this.socket = options.transport;
   // d3
   this.d3     = options.d3;
-  // chat (optional)
-  this._chat  = options.chat;
 
   // container
   this._container = this.d3.select(this.teamsList[0]);
@@ -123,6 +121,18 @@ Game.prototype.getTeam = function Game_getTeam(handle)
 {
   return $.find(this.teams, {login: handle});
 }
+
+// Attaches reference to known external objects
+Game.prototype.attach = function Game_attach(collection)
+{
+  // so far it's only chat
+  if ('chat' in collection)
+  {
+    this._chat = collection['chat'];
+  }
+}
+
+// more meaningful methods
 
 Game.prototype.addTeam = function Game_addTeam(team)
 {
