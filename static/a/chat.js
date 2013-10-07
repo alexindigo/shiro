@@ -52,23 +52,8 @@ Chat.prototype.init = function Chat_init()
     // [chat] welcome message
     if (data['chat'])
     {
-      // if current instance is out of date
-      // reset it
-      if (_chat.instance() != data.chat.instance)
-      {
-        _chat.instance(data.chat.instance);
-        _chat.user(false);
-      }
-
-      // check for user
-      if (!_chat.user())
-      {
-        _chat._toggleUserPanel();
-      }
-      else // try to login
-      {
-        _chat.socket.write({ 'chat:login': _chat.user() });
-      }
+      // check login
+      _chat._login(data['chat'].instance);
 
       _chat.setMessages(data.chat.messages);
     }
@@ -78,7 +63,17 @@ Chat.prototype.init = function Chat_init()
     {
       _chat.addSystemMessage('Error: '+data['chat:error'].err.message+'.', 'error');
 
-      switch (data['chat:error'].from)
+      // check error code
+      // only handle 403 for now
+      switch(data['chat:error'].err.code)
+      {
+        case '403':
+          _chat._login();
+          break;
+      }
+
+      // check error origin
+      switch (data['chat:error'].origin)
       {
         // handle login errors
         case 'login':
@@ -187,6 +182,28 @@ Chat.prototype.addSystemMessage = function Chat_addSystemMessage(text, type)
 }
 
 // --- demi-private methods
+
+Chat.prototype._login = function Chat__login(instance)
+{
+  // if current instance is out of date
+  // reset it
+  if (instance && this.instance() != instance)
+  {
+    this.instance(instance);
+    this.user(false);
+  }
+
+  // check for user
+  if (!this.user())
+  {
+    this._toggleUserPanel();
+  }
+  else // try to login
+  {
+    this.socket.write({ 'chat:login': this.user() });
+  }
+
+}
 
 // handle logged event
 Chat.prototype._logged = function Chat__logged(user)
