@@ -1,24 +1,12 @@
 /* --- gameplay */
 
-.gameplay
-{
-  position: fixed;
-  display: block;
-  top: 2%;
-  left: 2%;
-  right: 22%;
-  width: auto;
-  height: 40px;
-  text-align: center;
-outline: 1px solid #00ffff;
-}
-
 .gameplay_question
 {
   position: relative;
   display: inline-block;
   width: 40px;
   height: 40px;
+  margin: 0px;
   line-height: 40px;
   font-size: 20px;
   color: #999999;
@@ -29,7 +17,9 @@ outline: 1px solid #00ffff;
 }
   .gameplay_question.gameplay_question_played
   {
+    border-color: transparent;
     color: #e8e8e8;
+    background-color: #ffffff;
   }
   .gameplay_question:hover
   {
@@ -51,14 +41,104 @@ outline: 1px solid #00ffff;
 }
   .gameplay_question.gameplay_question_played:before
   {
+    background-color: #dd3333;
+  }
+  .gameplay_question.gameplay_question_playing:before
+  {
     content: none;
   }
-
-/* --- scoreboard */
-
-.scoreboard_control
+/* turn off user level stuff */
+.gameplay_question:after
 {
-  margin: 7px 10px 0px;
+  content: none;
+}
+.gameplay_question.gameplay_question_playing
+{
+  -moz-animation: none;
+  -webkit-animation: none;
+  animation: none;
+}
+
+.gameplay_add_question
+{
+  position: absolute;
+  top: 8px;
+  right: 0px;
+}
+.gameplay_add_question:before
+{
+  content: "add question";
+}
+
+.gameplay_question_controls
+{
+  position: absolute;
+  top: 0px;
+  right: 0px;
+  bottom: 0px;
+  left: 0px;
+  width: auto;
+  height: auto;
+}
+.gameplay_show_answer,
+.gameplay_edit_question,
+.gameplay_delete_question
+{
+  display: none;
+
+  position: absolute;
+  bottom: -35px;
+  width: 100%;
+  line-height: 20px;
+  font-size: 10px;
+  color: #cccccc;
+  text-align: center;
+}
+  .gameplay_question.gameplay_question_playing:hover .gameplay_show_answer
+  {
+    display: block;
+  }
+  .gameplay_show_answer:hover,
+  .gameplay_edit_question:hover,
+  .gameplay_delete_question:hover
+  {
+    color: #444444;
+  }
+.gameplay_edit_question
+{
+  bottom: -20px;
+}
+  .gameplay_question:hover .gameplay_edit_question,
+  /* show delete button only for the last question */
+  .gameplay_question:last-child:hover .gameplay_delete_question
+  {
+    display: block;
+  }
+  .gameplay_question.gameplay_question_playing .gameplay_delete_question
+  {
+    display: none;
+  }
+
+
+.gameplay_show_answer:before
+{
+  content: "answer";
+}
+.gameplay_edit_question:before
+{
+  content: "edit";
+}
+.gameplay_delete_question:before
+{
+  content: "delete";
+}
+
+/* --- scoreboard & gameplay DMZ */
+
+.scoreboard_control,
+.gameplay_control
+{
+  margin-left: 10px;
   padding: 5px 15px;
   font-family: 'Ubuntu Condensed', sans-serif;
   font-size: 14px;
@@ -68,18 +148,20 @@ outline: 1px solid #00ffff;
   background-color: #ffffff;
   cursor: pointer;
 }
-  .scoreboard_control:hover
+  .scoreboard_control:hover,
+  .gameplay_control:hover
   {
     color: #333333;
     border-color: #999999;
   }
 
+/* --- scoreboard */
+
 .scoreboard_add_team
 {
   position: absolute;
-  right: 2%;
-  bottom: 2%;
-  margin-right: 0px;
+  top: 0px;
+  right: 0px;
 }
 .scoreboard_add_team:before
 {

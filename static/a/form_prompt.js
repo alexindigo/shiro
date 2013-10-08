@@ -44,7 +44,7 @@ FormPrompt.prototype.data = function FormPrompt_data(data)
 
       if ((match = field.className.match(classFieldRE)) && (match[1] in data))
       {
-        $('input', field)[0].value = data[match[1]];
+        $('textarea, input', field)[0].value = data[match[1]];
       }
     });
   }
@@ -75,7 +75,7 @@ FormPrompt.prototype.deactivate = function FormPrompt_deactivate(action)
   if (!this.active) return;
 
   // gather data
-  $('.formprompt_field>input', this.container).each(function(el)
+  $('.formprompt_field>input, .formprompt_field>textarea', this.container).each(function(el)
   {
     fields[el.name] = el.value;
     // clean up
@@ -141,7 +141,14 @@ FormPrompt.prototype._init = function FormPrompt__init()
   {
     for (i=0; i<this._fields.length; i++)
     {
-      this.containerFields.append(this._makeField(this._fields[i]));
+      if (this._fields[i].type == 'textarea')
+      {
+        this.containerFields.append(this._makeTextarea(this._fields[i]));
+      }
+      else
+      {
+        this.containerFields.append(this._makeField(this._fields[i]));
+      }
     }
   }
 
@@ -175,6 +182,15 @@ FormPrompt.prototype._makeField = function FormPrompt__makeField(field)
 
   return $('<label class="'+classes+'">'+field.title+'<input type="'+(field.type || 'text')+'" name="'+field.name+'" value="'+(('value' in field) ? field.value : '')+'"'+(field.readonly ? ' readonly' : '')+'></label>');
 }
+
+FormPrompt.prototype._makeTextarea = function FormPrompt__makeTextarea(field)
+{
+  var classes = [ [this._classPrefix, 'field'].join('_') , [this._classPrefix, 'field', field.name].join('_') ].join(' ')
+    ;
+
+  return $('<label class="'+classes+'">'+field.title+'<textarea name="'+field.name+'"'+(field.readonly ? ' readonly' : '')+'>'+(('value' in field) ? field.value : '')+'</textarea></label>');
+}
+
 
 // creates control
 FormPrompt.prototype._makeControl = function FormPrompt__makeControl(control)

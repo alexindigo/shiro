@@ -3,6 +3,7 @@
 
 function Game(options)
 {
+  this.gameplay   = typeof options.gameplay == 'string' ? $(options.gameplay) : options.gameplay;
   this.scoreboard = typeof options.scoreboard == 'string' ? $(options.scoreboard) : options.scoreboard;
   this.teamsList  = typeof options.teamsList == 'string' ? $(options.teamsList) : options.teamsList;
   this.timer      = typeof options.timer == 'string' ? $(options.timer) : options.timer;
@@ -14,15 +15,23 @@ function Game(options)
   // websockets
   this.socket = options.transport;
 
-  // --- d3
-  this.d3     = options.d3;
+  // -- teams
 
+  // d3
+  this.d3     = options.d3;
   // teams container
   this._container = this.d3.select(this.teamsList[0]);
   // team drawing function
   this._drawTeam = $.partial(this._drawTeamStub, this);
 
   // question drawing function
+  this._drawQuestion = $.partial(this._drawQuestionStub, this);
+
+  // -- gameplay
+
+  // d3
+  this._gameplayContainer = this.d3.select(this.gameplay[0]);
+  // drawing function
   this._drawQuestion = $.partial(this._drawQuestionStub, this);
 
   // --- current data storage
@@ -96,6 +105,13 @@ Game.prototype.init = function Game_init()
     {
       _game.addQuestion(data['game:question_added']);
     }
+
+    // [game:team_deleted]
+    if (data['game:question_deleted'])
+    {
+      _game.deleteQuestion(data['game:question_deleted']);
+    }
+
 
     console.log('game', data);
   });
@@ -185,6 +201,15 @@ Game.prototype.addQuestion = function Game_addQuestion(question)
   this._renderQuestions();
 }
 
+Game.prototype.deleteQuestion = function Game_deleteQuestion(question)
+{
+  var _game = this;
+
+  // find and kill
+  $.find(this.questions, function(q, i){ if (q.index == question.index) { _game.questions.splice(i, 1); return true; } });
+
+  this._renderQuestions();
+}
 
 Game.prototype.setQuestions = function Game_setQuestions(questions)
 {
@@ -236,8 +261,40 @@ Game.prototype._drawTeamStub = function Game__drawTeamStub(_game, d)
     .html(html);
 }
 
+Game.prototype._renderQuestions = function Game__renderQuestions()
+{
+  var item;
+
+  // sort
+  this.questions = $.sortBy(this.questions, 'index');
+
+  item = this._gameplayContainer.selectAll('.gameplay_question')
+    .data(this.questions)
+    .order()
+    .each(this._drawQuestion)
+    ;
+
+  item.enter().append('span')
+    .order()
+    .each(this._drawQuestion)
+    ;
+
+  item.exit()
+    .remove()
+    ;
+}
+
 Game.prototype._drawQuestionStub = function Game__drawQuestionStub(_game, d)
 {
+  // this here is a DOM element
+  var el   = _game.d3.select(this)
+    ;
+
+  el
+    .classed('gameplay_question', true)
+    .classed('gameplay_question_played', !!d.played)
+    .attr('id', 'gameplay_question_'+d.index)
+    .text(d.index);
 }
 
 Game.prototype._sortTeams = function Game__sortTeams(a, b)

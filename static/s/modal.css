@@ -12,14 +12,20 @@
   left: 0px;
   width: auto;
   height: auto;
-  background-color: #f8f8f8;
-  opacity: 0.8;
+  background-color: #fcfcfc;
+  opacity: 0.7;
   /* this should cover everything, otherwise other party should be refactored */
   z-index: 10;
 }
-
+/* blurrrr */
+body.modal_under_modal>div:not(.modal_is_modal)
+{
+  -webkit-filter: blur(4px);
+  filter: blur(4px);
+}
 /* being real modal and prevent blocked content scrolling */
 body.modal_under_modal
 {
   overflow: hidden;
 }
+

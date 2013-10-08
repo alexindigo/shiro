@@ -6,20 +6,32 @@ Game.prototype._postInit = function Game__postInit()
 {
   var _game = this;
 
+  // socket callback pool
+  this._callbackPool = {};
+
   // --- add extra containers
 
   // global var – containerGameplay, set in admin.html
-  this.containerGameplay = typeof containerGameplay == 'string' ? $(containerGameplay) : containerGameplay;
-
+  this.gameplay = typeof containerGameplay == 'string' ? $(containerGameplay) : containerGameplay;
   // d3
-  this._gameplay = this.d3.select(this.containerGameplay[0]);
-  // drawing function
-  this._drawQuestion = $.partial(this._drawQuestionStub, this);
+  this._gameplayContainer = this.d3.select(this.gameplay[0]);
 
   // --- add extra events
 
   this.socket.on('data', function primus_onData(data)
   {
+    // [_:callback]
+    if (data['_:callback'])
+    {
+      if (typeof data['_:callback'] == 'object' && data['_:callback'].hash && typeof _game._callbackPool[data['_:callback'].hash] == 'function')
+      {
+        // pass error and data to the stored callback
+        _game._callbackPool[data['_:callback'].hash].call(_game, data['_:callback'].err, data['_:callback'].data);
+        // cleanup
+        delete _game._callbackPool[data['_:callback'].hash];
+      }
+    }
+
     // [game:auth]
     if (data['game:auth'])
     {
@@ -62,7 +74,7 @@ Game.prototype._postInit = function Game__postInit()
   });
 
   // edit team action
-  $('.scoreboard').on('click', '.scoreboard_edit_team', function(e)
+  this.scoreboard.on('click', '.scoreboard_edit_team', function(e)
   {
     var el = $(this)
       , team = el.parents('.scoreboard_team').attr('id').replace(/^scoreboard_team_/, '')
@@ -74,7 +86,7 @@ Game.prototype._postInit = function Game__postInit()
   });
 
   // delete team action
-  $('.scoreboard').on('click', '.scoreboard_delete_team', function(e)
+  this.scoreboard.on('click', '.scoreboard_delete_team', function(e)
   {
     var el = $(this)
       , team = el.parents('.scoreboard_team').attr('id').replace(/^scoreboard_team_/, '')
@@ -84,6 +96,39 @@ Game.prototype._postInit = function Game__postInit()
 
     _game._toggleDeleteTeamModal(true, team);
   });
+
+  // add question action
+  $('.gameplay_add_question').on('click', function(e)
+  {
+    _game._toggleAddQuestionModal(true);
+  });
+
+  // edit question action
+  this.gameplay.on('click', '.gameplay_edit_question', function(e)
+  {
+    var el       = $(this)
+      , question = el.parents('.gameplay_question').attr('id').replace(/^gameplay_question_/, '')
+      ;
+
+    if (!question) return;
+
+    _game._toggleEditQuestionModal(true, question);
+  });
+
+  // delete question action
+  this.gameplay.on('click', '.gameplay_delete_question', function(e)
+  {
+    var el       = $(this)
+      , question = el.parents('.gameplay_question').attr('id').replace(/^gameplay_question_/, '')
+      ;
+
+    if (!question) return;
+
+    _game._toggleDeleteQuestionModal(true, question);
+  });
+
+
+  // --- Modals
 
   // create auth prompt
   this.authModal = new FormPrompt(
@@ -146,8 +191,41 @@ Game.prototype._postInit = function Game__postInit()
     ]
   });
 
-}
+  // --- questions
 
+  // create team prompt
+  this.questionModal = new FormPrompt(
+  {
+    title: 'add question',
+    fields:
+    [
+      {type: 'textarea', name: 'text', title: 'question'},
+      {type: 'textarea', name: 'answer', title: 'answer'}
+    ],
+    controls:
+    [
+      {action: 'submit', title: 'add'},
+      {action: 'cancel', title: 'cancel'}
+    ]
+  });
+
+  // edit team prompt
+  this.questionEditModal = new FormPrompt(
+  {
+    title: 'edit question',
+    fields:
+    [
+      {type: 'textarea', name: 'text', title: 'question'},
+      {type: 'textarea', name: 'answer', title: 'answer'}
+    ],
+    controls:
+    [
+      {action: 'submit', title: 'update'},
+      {action: 'cancel', title: 'cancel'}
+    ]
+  });
+
+}
 
 // --- toggles team modals on/off
 
@@ -247,6 +325,113 @@ Game.prototype._toggleDeleteTeamModal = function Game__toggleDeleteTeamModal(sho
   {
     this.confirmModal.deactivate();
   }
+}
+
+// add question
+Game.prototype._toggleAddQuestionModal = function Game__toggleAddQuestionModal(show)
+{
+  var _game = this;
+
+  if (arguments.length < 1)
+  {
+    show = true;
+  }
+
+  if (show)
+  {
+    this.questionModal.activate(function(action, data)
+    {
+      if (action == 'submit')
+      {
+        _game.socket.write({ 'admin:add_question': {text: data.text, answer: data.answer} });
+      }
+    });
+  }
+  else
+  {
+    this.questionModal.deactivate();
+  }
+}
+
+// edit question
+Game.prototype._toggleEditQuestionModal = function Game__toggleEditQuestionModal(show, question)
+{
+  var _game    = this
+    , callback = this._generateHash()
+    ;
+
+  // be on defensive side
+  if (!question) return;
+
+  if (arguments.length < 1)
+  {
+    show = true;
+  }
+
+  if (show)
+  {
+    // fetch question data
+    this.socket.write({ 'admin:get_question': {index: question, callback: callback} });
+
+    // wait for the response
+    this._onSocketCallback(callback, function(err, question)
+    {
+      if (err) return;
+
+      this.questionEditModal.title('Edit question <i>'+question.index+'</i>');
+      this.questionEditModal.data(question);
+
+      this.questionEditModal.activate(function(action, data)
+      {
+        var diff;
+
+        if (action == 'submit')
+        {
+          if (diff = _game._diffObject(question, data))
+          {
+            _game.socket.write({ 'admin:update_question': $.merge({index: question.index}, data) });
+          }
+        }
+      });
+
+    });
+  }
+  else
+  {
+    this.questionEditModal.deactivate();
+  }
+}
+
+// delete question
+Game.prototype._toggleDeleteQuestionModal = function Game__toggleDeleteQuestionModal(show, question)
+{
+  var _game = this
+    ;
+
+  // be on defensive side
+  if (!question) return;
+
+  if (arguments.length < 1)
+  {
+    show = true;
+  }
+
+  if (show)
+  {
+    this.confirmModal.title('Are you sure you want to <i>delete</i> question <i>'+question+'</i>?');
+
+    this.confirmModal.activate(function(action)
+    {
+      if (action == 'yes')
+      {
+        _game.socket.write({ 'admin:delete_question': {index: question} });
+      }
+    });
+  }
+  else
+  {
+    this.confirmModal.deactivate();
+  }
 
 }
 
@@ -270,42 +455,30 @@ Game.prototype._drawTeamStub = function Game__drawTeamStub(_game, d)
     .html(html);
 }
 
-// Custom / admin specific _renderQuestions
-Game.prototype._renderQuestions = function Game__renderQuestions()
-{
-  var item;
-
-  // sort
-  this.questions = $.sortBy(this.questions, 'index');
-
-  item = this._gameplay.selectAll('.gameplay_question')
-    .data(this.questions)
-    .order()
-    .each(this._drawQuestion)
-    ;
-
-  item.enter().append('span')
-    .order()
-    .each(this._drawQuestion)
-    ;
-
-  item.exit()
-    .remove()
-    ;
-}
-
+// Custom question html element
 Game.prototype._drawQuestionStub = function Game__drawQuestionStub(_game, d)
 {
   // this here is a DOM element
   var el   = _game.d3.select(this)
-    , html = '';
+    , html = d.index;
     ;
+
+  html += '<span class="gameplay_question_controls"><span class="gameplay_edit_question"></span><span class="gameplay_delete_question"></span><span class="gameplay_show_answer"></span></span>';
 
   el
     .classed('gameplay_question', true)
     .classed('gameplay_question_played', !!d.played)
     .attr('id', 'gameplay_question_'+d.index)
-    .text(d.index);
+    .html(html);
+}
+
+// -- Santa's little helpers
+
+// Waits for callback event from the server
+// TOOD: Add timeout
+Game.prototype._onSocketCallback = function Game__onSocketCallback(hash, callback, options)
+{
+  this._callbackPool[hash] = callback;
 }
 
 // Object diff method
@@ -329,4 +502,16 @@ Game.prototype._diffObject = function Game__diffObject(a, b)
   }
 
   return isDifferent ? result : false;
+}
+
+// generates (uniqly) random hash
+// for callback id
+Game.prototype._generateHash = function Game__generateHash()
+{
+  var time = Date.now() // get unique number
+    , salt = Math.floor(Math.random() * Math.pow(10, Math.random()*10)) // get variable length prefix
+    , hash = time.toString(36) + salt.toString(36) // construct unique id
+    ;
+
+  return hash;
 }

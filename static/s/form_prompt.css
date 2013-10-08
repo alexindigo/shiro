@@ -28,6 +28,7 @@
   border: 1px solid #eeeeee;
   border-radius: 4px;
   background-color: #ffffff;
+  background-color: rgba(255, 255, 255, 0.85);
   box-shadow: 2px 2px 5px #cccccc;
   vertical-align: middle;
 }
@@ -50,13 +51,16 @@
 .formprompt_field
 {
   display: block;
-  width: 300px;
+  min-width: 300px;
   margin: 5px 0px;
   line-height: 34px;
   font-size: 16px;
   color: #999999;
   text-align: right;
 }
+
+/* input fields: text, password */
+
 .formprompt_field>input[type=text],
 .formprompt_field>input[type=password]
 {
@@ -70,6 +74,27 @@
 }
 .formprompt_field>input[type=text][readonly],
 .formprompt_field>input[type=password][readonly]
+{
+  color: #999999;
+}
+
+/* textarea */
+
+.formprompt_field>textarea
+{
+  width: 500px;
+  min-height: 34px;
+  height: 150px;
+  margin-left: 10px;
+  padding: 5px;
+  line-height: 24px;
+  font-size: 16px;
+  border: 1px solid #cccccc;
+  border-radius: 4px;
+  text-align: left;
+  resize: vertical;
+}
+.formprompt_field>textarea
 {
   color: #999999;
 }

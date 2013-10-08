@@ -2,6 +2,7 @@
 <html>
 <head>
  <meta charset="utf-8">
+ <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=0"/>
  <title>Fukuro &bull; Admin</title>
  <link rel="stylesheet" href="/s/_main.css">
  <link rel="stylesheet" href="/s/_admin.css">
@@ -9,8 +10,8 @@
 
 <body>
 
-<div class="gameplay"></div>
 <div class="scoreboard"><div class="scoreboard_teams"></div><span class="scoreboard_control scoreboard_add_team"></span></div>
+<div class="gameplay"><div class="gameplay_questions"></div><span class="gameplay_control gameplay_add_question"></span></div>
 <div class="question"></div>
 <div class="answer"></div>
 <div class="log"></div>
@@ -37,7 +38,7 @@
 <script>
 
 var gameType = 'admin';
-var containerGameplay = '.gameplay';
+var containerGameplay = '.gameplay_questions';
 
 </script>
 </body>

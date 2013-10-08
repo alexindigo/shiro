@@ -116,7 +116,7 @@
 }
   .chat_message_error .chat_message_text
   {
-    color: #f04040;
+    color: #dd3333;
   }
 .chat_message_status .chat_message_text:before,
 .chat_message_error .chat_message_text:before

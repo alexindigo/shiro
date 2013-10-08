@@ -19,6 +19,7 @@ $.domReady(function()
       { type      : window.gameType
       , d3        : d3
       , transport : primus
+      , gameplay  : '.gameplay'
       , scoreboard: '.scoreboard'
       , teamsList : '.scoreboard_teams'
       , timer     : '.timer'
