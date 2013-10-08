@@ -70,6 +70,7 @@ Game.prototype._postInit = function Game__postInit()
   // add team action
   $('.scoreboard_add_team').on('click', function(e)
   {
+    e.stop();
     _game._toggleAddTeamModal(true);
   });
 
@@ -81,6 +82,8 @@ Game.prototype._postInit = function Game__postInit()
       ;
 
     if (!team) return;
+
+    e.stop();
 
     _game._toggleEditTeamModal(true, team);
   });
@@ -94,12 +97,32 @@ Game.prototype._postInit = function Game__postInit()
 
     if (!team) return;
 
+    e.stop();
+
     _game._toggleDeleteTeamModal(true, team);
+  });
+
+  // pick question action
+  this.gameplay.on('click', '.gameplay_question', function(e)
+  {
+    var question;
+
+    // reduce noise
+    if (!$(e.target).hasClass('gameplay_question_controls')) return;
+
+    question = $(this).attr('id').replace(/^gameplay_question_/, '');
+
+    if (!question) return;
+
+    e.stop();
+
+    _game.currentQuestion(question);
   });
 
   // add question action
   $('.gameplay_add_question').on('click', function(e)
   {
+    e.stop();
     _game._toggleAddQuestionModal(true);
   });
 
@@ -112,6 +135,8 @@ Game.prototype._postInit = function Game__postInit()
 
     if (!question) return;
 
+    e.stop();
+
     _game._toggleEditQuestionModal(true, question);
   });
 
@@ -123,6 +148,8 @@ Game.prototype._postInit = function Game__postInit()
       ;
 
     if (!question) return;
+
+    e.stop();
 
     _game._toggleDeleteQuestionModal(true, question);
   });
@@ -225,6 +252,18 @@ Game.prototype._postInit = function Game__postInit()
     ]
   });
 
+}
+
+Game.prototype.currentQuestion = function Game_currentQuestion(index)
+{
+  if (arguments.length > 0)
+  {
+    this.questionInPlay = index;
+
+    this.socket.write({ 'admin:set_question': {index: index} });
+  }
+
+  return this.questionInPlay;
 }
 
 // --- toggles team modals on/off

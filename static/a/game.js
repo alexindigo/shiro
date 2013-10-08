@@ -38,6 +38,8 @@ function Game(options)
   this.teams     = [];
   this.questions = [];
 
+  this.questionInPlay = 0;
+
   // init
   this.init();
 }
