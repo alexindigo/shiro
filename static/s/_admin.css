@@ -180,8 +180,13 @@
 }
 .gameplay_start_timer:before
 {
-  content: "timer";
+  content: "start timer";
 }
+  .gameplay_start_timer[data-timer]:before
+  {
+    content: "stop timer :" attr(data-timer);
+  }
+
 
 /* --- scoreboard */
 

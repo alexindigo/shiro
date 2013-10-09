@@ -52,6 +52,7 @@ serverOptions =
   websockets:
   {
     transformer  : 'socket.io',
+//    transformer  : 'engine.io',
     clientLibrary: path.join(staticPath, 'a/primus.js')
   }
 };
@@ -107,6 +108,13 @@ function main()
 
     // everything ready, open doors to the public
     startServer();
+
+    // add websockets access
+    if (wigwam.instance.websockets)
+    {
+      game.attach({sockets: wigwam.instance.websockets});
+      chat.attach({sockets: wigwam.instance.websockets});
+    }
   });
 
 }

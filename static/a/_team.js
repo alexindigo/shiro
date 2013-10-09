@@ -52,8 +52,7 @@ Game.prototype._postInit = function Game__postInit()
     ],
     controls:
     [
-      {action: 'submit', title: 'ok'},
-      {action: 'cancel', title: 'cancel'}
+      {action: 'submit', title: 'ok'}
     ]
   });
 }

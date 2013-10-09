@@ -67,6 +67,13 @@ Game.prototype._postInit = function Game__postInit()
 
   // admin stuff
 
+  // start timer
+  $('.gameplay_start_timer').on('click', function(e)
+  {
+    e.stop();
+    _game.startStopTimer();
+  });
+
   // add team action
   $('.scoreboard_add_team').on('click', function(e)
   {
@@ -168,8 +175,7 @@ Game.prototype._postInit = function Game__postInit()
     ],
     controls:
     [
-      {action: 'submit', title: 'ok'},
-      {action: 'cancel', title: 'cancel'}
+      {action: 'submit', title: 'ok'}
     ]
   });
 
@@ -253,6 +259,20 @@ Game.prototype._postInit = function Game__postInit()
     ]
   });
 
+}
+
+Game.prototype.startStopTimer = function Game_startStopTimer()
+{
+  // turn it on if it's off
+  // and vice versa
+  if (this.timerCounting)
+  {
+    this.socket.write({ 'admin:set_timer': 'off' });
+  }
+  else
+  {
+    this.socket.write({ 'admin:set_timer': 'on' });
+  }
 }
 
 Game.prototype.pickQuestion = function Game_pickQuestion(index)
@@ -510,6 +530,42 @@ Game.prototype._drawQuestionStub = function Game__drawQuestionStub(_game, d)
     .classed('gameplay_question_played', !!d.played)
     .attr('id', 'gameplay_question_'+d.index)
     .html(html);
+}
+
+// Admin specific timer animation
+Game.prototype._renderTimer = function Game__renderTimer()
+{
+  var _game = this
+    , leftover
+    ;
+
+  // turn it off
+  if (!this.timerCounting)
+  {
+    $('.gameplay_start_timer')
+      .removeAttr('data-timer')
+      .removeClass('timer_running_out')
+      ;
+    return;
+  }
+
+  // be lazy
+  if (this._lastTick == this.timerCounting.tick) return;
+  this._lastTick = this.timerCounting.tick;
+
+  leftover = 59-this.timerCounting.tick;
+
+  $('.gameplay_start_timer').attr('data-timer', leftover < 10 ? '0'+leftover : leftover);
+
+  // extra treatment for the last 10 seconds
+  if (_game.timerCounting.tick > 49)
+  {
+    $('.gameplay_start_timer').addClass('timer_running_out');
+  }
+  else
+  {
+    $('.gameplay_start_timer').removeClass('timer_running_out');
+  }
 }
 
 // -- Santa's little helpers

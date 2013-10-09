@@ -6,7 +6,7 @@ function Game(options)
   this.gameplay   = typeof options.gameplay == 'string' ? $(options.gameplay) : options.gameplay;
   this.scoreboard = typeof options.scoreboard == 'string' ? $(options.scoreboard) : options.scoreboard;
   this.teamsList  = typeof options.teamsList == 'string' ? $(options.teamsList) : options.teamsList;
-  this.timer      = typeof options.timer == 'string' ? $(options.timer) : options.timer;
+  this.timerPanel = typeof options.timer == 'string' ? $(options.timer) : options.timer;
   this.question   = typeof options.question == 'string' ? $(options.question) : options.question;
 
   // game play type
@@ -33,6 +33,13 @@ function Game(options)
   this._gameplayContainer = this.d3.select(this.gameplay[0]);
   // drawing function
   this._drawQuestion = $.partial(this._drawQuestionStub, this);
+
+  // -- timer
+
+  // create list of ticks
+  // one per second
+  this._timerTicksList = this.d3.range(60);
+  this._timerContainer = this.d3.select(this.timerPanel[0]);
 
   // --- current data storage
   this.teams     = [];
@@ -126,7 +133,19 @@ Game.prototype.init = function Game_init()
       _game.currentQuestion(data['game:current_question'].index);
     }
 
-    console.log('game', data);
+    // [game:timer]
+    if ('game:timer' in data)
+    {
+      _game.updateTimer(data['game:timer']);
+    }
+
+
+
+
+console.log('game', data);
+
+
+
   });
 
   // extra post init
@@ -267,6 +286,23 @@ Game.prototype.setState = function Game_setState(state)
   {
     this.currentQuestion(state['current_question']);
   }
+
+  // timer
+  this.updateTimer(state['timer']);
+}
+
+Game.prototype.updateTimer = function Game_updateTimer(timer)
+{
+  if (timer)
+  {
+    this.timerCounting = timer;
+  }
+  else
+  {
+    this.timerCounting = false;
+  }
+
+  this._renderTimer();
 }
 
 // --- demi-private methods
@@ -338,7 +374,7 @@ Game.prototype._renderQuestions = function Game__renderQuestions()
 Game.prototype._drawQuestionStub = function Game__drawQuestionStub(_game, d)
 {
   // this here is a DOM element
-  var el   = _game.d3.select(this)
+  var el = _game.d3.select(this)
     ;
 
   el
@@ -346,6 +382,69 @@ Game.prototype._drawQuestionStub = function Game__drawQuestionStub(_game, d)
     .classed('gameplay_question_played', !!d.played)
     .attr('id', 'gameplay_question_'+d.index)
     .text(d.index);
+}
+
+Game.prototype._renderTimer = function Game__renderTimer()
+{
+  var _game = this
+    , item
+    , totalWidth
+    , tickWidth
+    , tickMargin
+    ;
+
+  // check if timer stopped
+  // and cleanup
+  if (!this.timerCounting)
+  {
+    this.timerPanel.hide();
+    this.timerPanel.html('');
+    // show gameplay
+    this.gameplay.show();
+    // reset last tick
+    this._lastTick = null;
+    return;
+  }
+  else
+  {
+    // hide gameplay
+    this.gameplay.hide();
+    this.timerPanel.show();
+  }
+
+  // be lazy
+  if (this._lastTick == this.timerCounting.tick) return;
+  this._lastTick = this.timerCounting.tick;
+
+  totalWidth = this.timerPanel.dim().width;
+  // width – 1% within 5px - 20px range
+  tickWidth  = Math.min(20, Math.max(5, Math.floor(totalWidth/100)));
+  // margin - 0.5% within 2px - 10px range
+  tickMargin = Math.min(10, Math.max(2, Math.floor(totalWidth/200)));
+
+  // extra treatment for the last 10 seconds
+  this._timerContainer.classed('timer_running_out', (_game.timerCounting.tick > 49))
+
+  item = this._timerContainer.selectAll('.timer_tick')
+    .data(this._timerTicksList)
+    .order()
+    .classed('timer_tick', true)
+    .classed('timer_tick_passed', function(d) { return d < 60 - _game.timerCounting.tick})
+    .style('width', tickWidth + 'px')
+    .style('margin-left', tickMargin + 'px')
+    ;
+
+  item.enter().append('span')
+    .order()
+    .classed('timer_tick', true)
+    .classed('timer_tick_passed', function(d) { return d < 60 - _game.timerCounting.tick})
+    .style('width', tickWidth + 'px')
+    .style('margin-left', tickMargin + 'px')
+    ;
+
+  item.exit()
+    .remove()
+    ;
 }
 
 Game.prototype._sortTeams = function Game__sortTeams(a, b)
