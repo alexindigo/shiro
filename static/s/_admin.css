@@ -43,32 +43,29 @@
   {
     background-color: #dd3333;
   }
-  .gameplay_question.gameplay_question_playing:before
+  /* turn off user level stuff */
+  .gameplay_question:after
   {
     content: none;
   }
-/* turn off user level stuff */
-.gameplay_question:after
-{
-  content: none;
-}
-.gameplay_question.gameplay_question_playing
-{
-  -moz-animation: none;
-  -webkit-animation: none;
-  animation: none;
-}
-
-.gameplay_add_question
-{
-  position: absolute;
-  top: 8px;
-  right: 0px;
-}
-.gameplay_add_question:before
-{
-  content: "add question";
-}
+  .gameplay_question.gameplay_question_playing
+  {
+    border-color: transparent;
+    box-shadow: none;
+    -moz-animation: none;
+    -webkit-animation: none;
+    animation: none;
+  }
+  .gameplay_question.gameplay_question_playing:before
+  {
+    width: 0px;
+    height: 0px;
+    margin-left: -6px;
+    border: 6px solid transparent;
+    border-color: #fe6c1d transparent transparent transparent;
+    border-radius: 0px;
+    background-color: transparent;
+  }
 
 .gameplay_question_controls
 {
@@ -133,6 +130,14 @@
   content: "delete";
 }
 
+/* override forms */
+
+.formprompt_field_played>input[type=checkbox]
+{
+  margin-right: 476px;
+}
+
+
 /* --- scoreboard & gameplay DMZ */
 
 .scoreboard_control,
@@ -155,13 +160,37 @@
     border-color: #999999;
   }
 
+.gameplay_add_question
+{
+  position: absolute;
+  top: 8px;
+  left: 0px;
+  margin-left: 0px;
+}
+.gameplay_add_question:before
+{
+  content: "add question";
+}
+
+.gameplay_start_timer
+{
+  position: absolute;
+  top: 8px;
+  right: 0px;
+}
+.gameplay_start_timer:before
+{
+  content: "timer";
+}
+
 /* --- scoreboard */
 
 .scoreboard_add_team
 {
   position: absolute;
   top: 0px;
-  right: 0px;
+  left: 0px;
+  margin-left: 0px;
 }
 .scoreboard_add_team:before
 {

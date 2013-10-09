@@ -116,7 +116,7 @@ Game.prototype._postInit = function Game__postInit()
 
     e.stop();
 
-    _game.currentQuestion(question);
+    _game.pickQuestion(question);
   });
 
   // add question action
@@ -242,6 +242,7 @@ Game.prototype._postInit = function Game__postInit()
     title: 'edit question',
     fields:
     [
+      {type: 'checkbox', name: 'played', title: 'been played'},
       {type: 'textarea', name: 'text', title: 'question'},
       {type: 'textarea', name: 'answer', title: 'answer'}
     ],
@@ -254,16 +255,16 @@ Game.prototype._postInit = function Game__postInit()
 
 }
 
-Game.prototype.currentQuestion = function Game_currentQuestion(index)
+Game.prototype.pickQuestion = function Game_pickQuestion(index)
 {
-  if (arguments.length > 0)
+  if (this.questionInPlay != index)
   {
-    this.questionInPlay = index;
-
     this.socket.write({ 'admin:set_question': {index: index} });
   }
-
-  return this.questionInPlay;
+  else // unset
+  {
+    this.socket.write({ 'admin:set_question': {index: 0} });
+  }
 }
 
 // --- toggles team modals on/off

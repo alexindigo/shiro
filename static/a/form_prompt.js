@@ -40,11 +40,24 @@ FormPrompt.prototype.data = function FormPrompt_data(data)
   {
     this.containerFields.children().each(function(field)
     {
-      var match;
+      var match
+        , fieldInput
+        ;
 
       if ((match = field.className.match(classFieldRE)) && (match[1] in data))
       {
-        $('textarea, input', field)[0].value = data[match[1]];
+        fieldInput = $('textarea, input', field)[0];
+
+        // TODO: Make it sane
+        if (fieldInput.type == 'checkbox')
+        {
+          fieldInput.value = 'yes';
+          fieldInput.checked = !!data[match[1]];
+        }
+        else
+        {
+          fieldInput.value = data[match[1]];
+        }
       }
     });
   }
@@ -77,9 +90,18 @@ FormPrompt.prototype.deactivate = function FormPrompt_deactivate(action)
   // gather data
   $('.formprompt_field>input, .formprompt_field>textarea', this.container).each(function(el)
   {
-    fields[el.name] = el.value;
-    // clean up
-    el.value = '';
+    if (el.type == 'checkbox')
+    {
+      fields[el.name] = !!el.checked;
+      // clean up
+      el.checked = false;
+    }
+    else
+    {
+      fields[el.name] = el.value;
+      // clean up
+      el.value = '';
+    }
   });
 
   // fire callback
@@ -177,10 +199,20 @@ FormPrompt.prototype._init = function FormPrompt__init()
 // creates field
 FormPrompt.prototype._makeField = function FormPrompt__makeField(field)
 {
-  var classes = [ [this._classPrefix, 'field'].join('_') , [this._classPrefix, 'field', field.name].join('_') ].join(' ')
+  var classes =
+      [ [this._classPrefix, 'field'].join('_')
+      , [this._classPrefix, 'field', field.name].join('_')
+      ].join(' ')
+
+    , value = (field.type == 'checkbox' ? 'yes' : ('value' in field ? field.value : ''))
+
+    , flags =
+      [ (field.readonly ? ' readonly' : '')
+      , (field.type == 'checkbox' && field.value ? ' checked' : '')
+      ].join(' ')
     ;
 
-  return $('<label class="'+classes+'">'+field.title+'<input type="'+(field.type || 'text')+'" name="'+field.name+'" value="'+(('value' in field) ? field.value : '')+'"'+(field.readonly ? ' readonly' : '')+'></label>');
+  return $('<label class="'+classes+'">'+field.title+'<input type="'+(field.type || 'text')+'" name="'+field.name+'" value="'+value+'"'+flags+'></label>');
 }
 
 FormPrompt.prototype._makeTextarea = function FormPrompt__makeTextarea(field)

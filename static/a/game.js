@@ -71,8 +71,8 @@ Game.prototype.init = function Game_init()
       }
 
       _game.setTeams(data.game.teams);
-
       _game.setQuestions(data.game.questions);
+      _game.setState(data.game.state);
     }
 
     // [game:error]
@@ -108,12 +108,23 @@ Game.prototype.init = function Game_init()
       _game.addQuestion(data['game:question_added']);
     }
 
+    // [game:question_updated]
+    if (data['game:question_updated'])
+    {
+      _game.updateQuestion(data['game:question_updated']);
+    }
+
     // [game:team_deleted]
     if (data['game:question_deleted'])
     {
       _game.deleteQuestion(data['game:question_deleted']);
     }
 
+    // [game:current_question]
+    if (data['game:current_question'])
+    {
+      _game.currentQuestion(data['game:current_question'].index);
+    }
 
     console.log('game', data);
   });
@@ -203,6 +214,15 @@ Game.prototype.addQuestion = function Game_addQuestion(question)
   this._renderQuestions();
 }
 
+Game.prototype.updateQuestion = function Game_updateQuestion(question)
+{
+  // merge in updated question data
+  this.questions = $.each(this.questions, function(q){ if (q.index == question.index) { $.merge(q, question); } });
+
+  // render question element directly
+  this._drawQuestionStub.call($('#gameplay_question_'+question.index)[0], this, question);
+}
+
 Game.prototype.deleteQuestion = function Game_deleteQuestion(question)
 {
   var _game = this;
@@ -219,6 +239,35 @@ Game.prototype.setQuestions = function Game_setQuestions(questions)
   this._renderQuestions();
 }
 
+Game.prototype.currentQuestion = function Game_currentQuestion(index)
+{
+  if (this.questionInPlay != index)
+  {
+    // unselect previous one
+    if (this.questionInPlay)
+    {
+      $('#gameplay_question_'+this.questionInPlay).removeClass('gameplay_question_playing');
+    }
+
+    // don't do anything if current question was reset
+    if (this.questionInPlay = index)
+    {
+      $('#gameplay_question_'+this.questionInPlay).addClass('gameplay_question_playing');
+    }
+  }
+
+  return this.questionInPlay;
+}
+
+// Sets current game state
+Game.prototype.setState = function Game_setState(state)
+{
+  // current question
+  if (state['current_question'])
+  {
+    this.currentQuestion(state['current_question']);
+  }
+}
 
 // --- demi-private methods
 

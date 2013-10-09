@@ -39,10 +39,10 @@
   }
   .gameplay_question.gameplay_question_playing
   {
-    color: #33dd33;
-    border-color: #33dd33;
+    color: #fe6c1d;
+    border-color: #fe6c1d;
     background-color: #ffffff;
-    box-shadow: 0px 0px 8px #33dd33;
+    box-shadow: 0px 0px 8px #fe6c1d;
     z-index: 1;
   }
 .gameplay_question:after
@@ -89,11 +89,11 @@
 {
   from
   {
-    box-shadow: 0px 0px 8px #33dd33;
+    box-shadow: 0px 0px 8px #fe6c1d;
   }
   to
   {
-    box-shadow: 0px 0px 16px #33dd33;
+    box-shadow: 0px 0px 16px #fe6c1d;
   }
 }
 
@@ -102,12 +102,12 @@
   from
   {
     opacity: 0.5;
-    box-shadow: 0px 0px 8px #33dd33;
+    box-shadow: 0px 0px 8px #fe6c1d;
   }
   to
   {
     opacity: 1;
-    box-shadow: 0px 0px 16px #33dd33;
+    box-shadow: 0px 0px 16px #fe6c1d;
   }
 }
 
@@ -115,11 +115,11 @@
 {
   from
   {
-    box-shadow: 0px 0px 8px #33dd33;
+    box-shadow: 0px 0px 8px #fe6c1d;
   }
   to
   {
-    box-shadow: 0px 0px 16px #33dd33;
+    box-shadow: 0px 0px 16px #fe6c1d;
   }
 }
 

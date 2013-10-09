@@ -78,6 +78,19 @@
   color: #999999;
 }
 
+/* input fields: checbox */
+
+.formprompt_field>input[type=checkbox]
+{
+  width: 24px;
+  height: 24px;
+  margin: 0px 176px 0px 10px;
+  font-size: 16px;
+  border: 1px solid #cccccc;
+  border-radius: 4px;
+  text-align: center;
+}
+
 /* textarea */
 
 .formprompt_field>textarea
