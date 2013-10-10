@@ -178,6 +178,10 @@
   top: 8px;
   right: 0px;
 }
+  .gameplay_start_timer.timer_running_out
+  {
+    color: #fe6c1d;
+  }
 .gameplay_start_timer:before
 {
   content: "start timer";

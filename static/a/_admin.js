@@ -553,12 +553,12 @@ Game.prototype._renderTimer = function Game__renderTimer()
   if (this._lastTick == this.timerCounting.tick) return;
   this._lastTick = this.timerCounting.tick;
 
-  leftover = 59-this.timerCounting.tick;
+  leftover = 59-(this.timerCounting.tick || 0);
 
   $('.gameplay_start_timer').attr('data-timer', leftover < 10 ? '0'+leftover : leftover);
 
   // extra treatment for the last 10 seconds
-  if (_game.timerCounting.tick > 49)
+  if (leftover < 10)
   {
     $('.gameplay_start_timer').addClass('timer_running_out');
   }

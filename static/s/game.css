@@ -139,13 +139,14 @@
   right: 22%;
   width: auto;
   height: 40px;
+  padding-top: 5px;
   text-align: center;
 }
 
 .timer_tick
 {
   display: inline-block;
-  height: 40px;
+  height: 30px;
   border: 1px solid #fe6c1d;
 }
   .timer_tick:first-child
