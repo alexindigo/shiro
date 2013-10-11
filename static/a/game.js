@@ -3,11 +3,14 @@
 
 function Game(options)
 {
-  this.gameplay   = typeof options.gameplay == 'string' ? $(options.gameplay) : options.gameplay;
-  this.scoreboard = typeof options.scoreboard == 'string' ? $(options.scoreboard) : options.scoreboard;
-  this.teamsList  = typeof options.teamsList == 'string' ? $(options.teamsList) : options.teamsList;
-  this.timerPanel = typeof options.timer == 'string' ? $(options.timer) : options.timer;
-  this.question   = typeof options.question == 'string' ? $(options.question) : options.question;
+  this.gameplay      = typeof options.gameplay == 'string' ? $(options.gameplay) : options.gameplay;
+  this.scoreboard    = typeof options.scoreboard == 'string' ? $(options.scoreboard) : options.scoreboard;
+  this.teamsList     = typeof options.teamsList == 'string' ? $(options.teamsList) : options.teamsList;
+  this.timerPanel    = typeof options.timer == 'string' ? $(options.timer) : options.timer;
+  this.questionPanel = typeof options.question == 'string' ? $(options.question) : options.question;
+  this.questionText  = typeof options.questionText == 'string' ? $(options.questionText) : options.questionText;
+  this.answerPanel   = typeof options.answer == 'string' ? $(options.answer) : options.answer;
+  this.answerText    = typeof options.answerText == 'string' ? $(options.answerText) : options.answerText;
 
   // game play type
   this.type   = options.type || 'game';
@@ -139,6 +142,11 @@ Game.prototype.init = function Game_init()
       _game.updateTimer(data['game:timer']);
     }
 
+    // [game:display]
+    if ('game:display' in data)
+    {
+      _game.display(data['game:display']);
+    }
 
 
 
@@ -289,6 +297,9 @@ Game.prototype.setState = function Game_setState(state)
 
   // timer
   this.updateTimer(state['timer']);
+
+  // display
+  this.display(state['display']);
 }
 
 Game.prototype.updateTimer = function Game_updateTimer(timer)
@@ -305,6 +316,37 @@ Game.prototype.updateTimer = function Game_updateTimer(timer)
   }
 
   this._renderTimer();
+}
+
+// displaying question or question + answer
+// TODO: make it less coupled
+Game.prototype.display = function Game_display(data)
+{
+  // question
+  if (data && data['question'])
+  {
+    this.questionText.html(data['question'].text);
+    this.questionPanel.show();
+  }
+  else
+  {
+    this.questionPanel.hide();
+    this.questionText.html('');
+  }
+
+  // answer
+  if (data && data['answer'])
+  {
+    this.answerText.html(data['answer'].answer).show();
+    this.questionText.html(data['answer'].text);
+    this.questionPanel.show();
+  }
+  else if (!data)
+  {
+    this.answerText.hide().html('');
+    this.questionPanel.hide();
+    this.questionText.html('');
+  }
 }
 
 // --- demi-private methods

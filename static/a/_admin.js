@@ -161,6 +161,19 @@ Game.prototype._postInit = function Game__postInit()
     _game._toggleDeleteQuestionModal(true, question);
   });
 
+  // show answer action
+  this.gameplay.on('click', '.gameplay_show_answer', function(e)
+  {
+    var el       = $(this)
+      , question = el.parents('.gameplay_question').attr('id').replace(/^gameplay_question_/, '')
+      ;
+
+    if (!question) return;
+
+    e.stop();
+
+    _game.showAnswer(question);
+  });
 
   // --- Modals
 
@@ -286,6 +299,12 @@ Game.prototype.pickQuestion = function Game_pickQuestion(index)
     this.socket.write({ 'admin:set_question': {index: 0} });
   }
 }
+
+Game.prototype.showAnswer = function Game_showAnswer(index)
+{
+  this.socket.write({ 'admin:show_answer': {index: index} });
+}
+
 
 // --- toggles team modals on/off
 

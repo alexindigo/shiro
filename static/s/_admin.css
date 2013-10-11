@@ -105,6 +105,13 @@
 {
   bottom: -20px;
 }
+/* when it's last question and it's current
+ * shift answer control a notch down
+ */
+.gameplay_question:last-child .gameplay_show_answer
+{
+  bottom: -50px;
+}
   .gameplay_question:hover .gameplay_edit_question,
   /* show delete button only for the last question */
   .gameplay_question:last-child:hover .gameplay_delete_question
@@ -116,11 +123,6 @@
     display: none;
   }
 
-
-.gameplay_show_answer:before
-{
-  content: "answer";
-}
 .gameplay_edit_question:before
 {
   content: "edit";
@@ -128,6 +130,10 @@
 .gameplay_delete_question:before
 {
   content: "delete";
+}
+.gameplay_show_answer:before
+{
+  content: "answer";
 }
 
 /* override forms */

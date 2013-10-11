@@ -10,6 +10,7 @@
   width: auto;
   height: 40px;
   text-align: center;
+  z-index: 2;
 }
 
 .gameplay_question
@@ -233,38 +234,6 @@
 
 /* scoreboard */
 
-.scoreboard
-{
-  position: fixed;
-  display: block;
-  top: calc(4% + 40px);
-  left: 2%;
-  right: 22%;
-  bottom: 24%;
-  width: auto;
-  height: auto;
-  padding: 5%;
-  text-align: center;
-outline: 1px solid #00ff00;
-}
-.scoreboard:before
-{
-  content: "";
-  display: inline-block;
-  width: 0px;
-  height: 100%;
-  vertical-align: middle;
-}
-
-.scoreboard_teams
-{
-  position: relative;
-  display: inline-block;
-  width: auto;
-  height: auto;
-  vertical-align: middle;
-}
-
 .scoreboard_team
 {
   position: relative;
@@ -285,6 +254,88 @@ outline: 1px solid #00ff00;
   border-bottom: 1px solid #cccccc;
 }
 
+/* shared question & scoreboard panels */
+
+.scoreboard,
+.question
+{
+  position: fixed;
+  display: block;
+  top: calc(4% + 40px);
+  left: 2%;
+  right: 22%;
+  bottom: 24%;
+  width: auto;
+  height: auto;
+  padding: 5%;
+  text-align: center;
+  background-color: #ffffff;
+}
+.scoreboard:before,
+.question:before
+{
+  content: "";
+  display: inline-block;
+  width: 0px;
+  height: 100%;
+  vertical-align: middle;
+}
+.scoreboard_teams,
+.question_text
+{
+  display: inline-block;
+  width: auto;
+  height: auto;
+  vertical-align: middle;
+}
+
+/* question panel */
+
+.question_text
+{
+  font-size: 18px;
+  color: #000000;
+  white-space: pre-line;
+  pointer-events: none;
+}
+/* hide text */
+.question:after
+{
+  content: "";
+  position: absolute;
+  display: block;
+  top: 0px;
+  right: 0px;
+  bottom: 0px;
+  left: 0px;
+  width: auto;
+  height: auto;
+}
+.question_text::selection
+{
+  background-color: transparent;
+}
+
+/* shared question and answers */
+
+/* label */
+.question_text:before,
+.answer_text:before
+{
+  content: "question";
+  position: absolute;
+  display: block;
+  top: 10px;
+  left: 10px;
+  font-family: "Ubuntu", sans-serif;
+  font-size: 36px;
+  color: #cccccc;
+  opacity: 0.5;
+}
+  .answer_text:before
+  {
+    content: "answer";
+  }
 
 /* answer section */
 
@@ -297,5 +348,40 @@ outline: 1px solid #00ff00;
   bottom: 2%;
   width: auto;
   height: 20%;
-outline: 1px solid #0000ff;
+  border-top: 1px solid #cccccc;
+  text-align: center;
+}
+.answer:before
+{
+  content: "";
+  display: inline-block;
+  width: 0px;
+  height: 100%;
+  vertical-align: middle;
+}
+.answer_text
+{
+  display: inline-block;
+  width: auto;
+  height: auto;
+  vertical-align: middle;
+  pointer-events: none;
+}
+
+/* hide text */
+.answer:after
+{
+  content: "";
+  position: absolute;
+  display: block;
+  top: 0px;
+  right: 0px;
+  bottom: 0px;
+  left: 0px;
+  width: auto;
+  height: auto;
+}
+.answer_text::selection
+{
+  background-color: transparent;
 }

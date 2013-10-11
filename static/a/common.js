@@ -3,15 +3,17 @@ $.domReady(function()
   var primus = new Primus();
 
   /*var*/ game = new Game(
-      { type      : window.gameType
-      , d3        : d3
-      , transport : primus
-      , gameplay  : '.gameplay'
-      , scoreboard: '.scoreboard'
-      , teamsList : '.scoreboard_teams'
-      , timer     : '.timer'
-      , question  : '.question'
-      , answer    : '.answer'
+      { type        : window.gameType
+      , d3          : d3
+      , transport   : primus
+      , gameplay    : '.gameplay'
+      , scoreboard  : '.scoreboard'
+      , teamsList   : '.scoreboard_teams'
+      , timer       : '.timer'
+      , question    : '.question'
+      , questionText: '.question_text'
+      , answer      : '.answer'
+      , answerText  : '.answer_text'
       })
     ;
 
