@@ -19,9 +19,9 @@ $.domReady(function()
       { d3            : d3
       , transport     : primus
       , messageList   : '.log'
+      , chatPanel     : '.chat'
       , messageBox    : '.chat_messagebox'
       , submitButton  : '.chat_messagebox_send'
-      , hotkeyMod     : '.chat_messagebox_hotkey_mod'
       , userPanel     : '.user'
       , nicknameBox   : '.user_nickname'
       , userJoinButton: '.user_join'

@@ -139,6 +139,28 @@
   text-align: center;
   background-color: #ffffff;
 }
+  .chat.chat_blocked>*
+  {
+    display: none;
+  }
+  .chat.chat_blocked:before
+  {
+    content: "";
+    display: inline-block;
+    width: 0px;
+    height: 100%;
+    vertical-align: middle;
+  }
+  .chat.chat_blocked:after
+  {
+    content: "quiet\0aplease\0a\0a";
+    display: inline-block;
+    font-size: 16px;
+    color: #cccccc;
+    vertical-align: middle;
+    white-space: pre;
+    text-transform: uppercase;
+  }
 .chat_messagebox
 {
   width: 100%;

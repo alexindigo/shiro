@@ -4,9 +4,9 @@
 function Chat(options)
 {
   this.messageList    = typeof options.messageList == 'string' ? $(options.messageList) : options.messageList;
+  this.chatPanel      = typeof options.chatPanel == 'string' ? $(options.chatPanel) : options.chatPanel;
   this.messageBox     = typeof options.messageBox == 'string' ? $(options.messageBox) : options.messageBox;
   this.submitButton   = typeof options.submitButton == 'string' ? $(options.submitButton) : options.submitButton;
-  this.hotkeyMod      = typeof options.hotkeyMod == 'string' ? $(options.hotkeyMod) : options.hotkeyMod;
   this.userPanel      = typeof options.userPanel == 'string' ? $(options.userPanel) : options.userPanel;
   this.nicknameBox    = typeof options.nicknameBox == 'string' ? $(options.nicknameBox) : options.nicknameBox;
   this.userJoinButton = typeof options.userJoinButton == 'string' ? $(options.userJoinButton) : options.userJoinButton;
@@ -64,10 +64,10 @@ Chat.prototype.init = function Chat_init()
       _chat.addSystemMessage('Error: '+data['chat:error'].err.message+'.', 'error');
 
       // check error code
-      // only handle 403 for now
+      // only handle 401 for now
       switch (data['chat:error'].err.code)
       {
-        case 403:
+        case 401:
           _chat._login();
           break;
       }
@@ -159,6 +159,19 @@ Chat.prototype.submit = function Chat_submit(message, callback)
   this.socket.write({'chat:message': message});
   // do shortcut
   callback(null);
+}
+
+// blocks chat's UI
+Chat.prototype.block = function Chat_block(blocked)
+{
+  if (blocked)
+  {
+    this.chatPanel.addClass('chat_blocked');
+  }
+  else
+  {
+    this.chatPanel.removeClass('chat_blocked');
+  }
 }
 
 Chat.prototype.addMessage = function Chat_addMessage(message)

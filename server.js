@@ -148,8 +148,9 @@ function connectDb(callback)
   {
     if (err) return callback(err);
 
-    // game should be able control chat
+    // add references between chat and game
     game.attach({chat: chat});
+    chat.attach({game: game});
 
     callback(null);
   });

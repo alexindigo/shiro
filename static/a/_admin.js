@@ -611,3 +611,12 @@ Game.prototype._generateHash = function Game__generateHash()
 
   return hash;
 }
+
+// --- custom chat methods
+
+// don't block admin's chat
+// blocks chat's UI
+Chat.prototype.block = function Chat_block(blocked)
+{
+  // do nothing
+}

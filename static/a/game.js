@@ -296,10 +296,12 @@ Game.prototype.updateTimer = function Game_updateTimer(timer)
   if (timer)
   {
     this.timerCounting = timer;
+    this._chat.block(true);
   }
   else
   {
     this.timerCounting = false;
+    this._chat.block(false);
   }
 
   this._renderTimer();
