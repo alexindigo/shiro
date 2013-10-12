@@ -4,6 +4,7 @@
  <meta charset="utf-8">
  <title>Fukuro &bull; Team</title>
  <link rel="stylesheet" href="/s/_main.css">
+ <link rel="stylesheet" href="/s/_team.css">
 </head>
 
 <body>
@@ -11,8 +12,14 @@
 <div class="gameplay"></div>
 <div class="timer"></div>
 <div class="scoreboard"><div class="scoreboard_teams"></div></div>
-<div class="question"><div class="question_text"></div></div>
-<div class="answer"><div class="answer_text"></div><div class="answer_form"></div></div>
+<div class="question hidden"><div class="question_text" unselectable="on"></div></div>
+<div class="answer">
+  <div class="answer_text hidden" unselectable="on"></div>
+  <div class="answer_form hidden">
+    <textarea class="answer_form_messagebox" placeholder="Write your answer here..."></textarea>
+    <button class="answer_form_control answer_form_messagebox_send">submit answer</button>
+  </div>
+</div>
 <div class="log"></div>
 
 <div class="chat">

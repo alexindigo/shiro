@@ -34,5 +34,8 @@ $.domReady(function()
   chat.attach({game: game});
 
   game.attach({chat: chat});
+
+  // do the hidden thing
+  $('.hidden').hide().removeClass('hidden');
 });
 

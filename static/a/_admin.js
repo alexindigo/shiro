@@ -6,6 +6,9 @@ Game.prototype._postInit = function Game__postInit()
 {
   var _game = this;
 
+  // keep track of answered questions
+  this.answered = {};
+
   // socket callback pool
   this._callbackPool = {};
 
@@ -227,7 +230,7 @@ Game.prototype._postInit = function Game__postInit()
     ]
   });
 
-  // confimation modal (delete team)
+  // confimation modal
   this.confirmModal = new FormPrompt(
   {
     controls:
@@ -520,16 +523,19 @@ Game.prototype._drawTeamStub = function Game__drawTeamStub(_game, d)
   // this here is a DOM element
   var el   = _game.d3.select(this)
     , isMe = (_game.user() && d.login == _game.user().login)
-    , html = '';
+    , frac = d.time_spent && d.points ? Math.round(d.time_spent / (d.points * 60000) * 1000) : 0
+    , html = ''
     ;
 
   html += '<span class="scoreboard_team_name">'+d.name+'</span>';
-  html += '<span class="scoreboard_team_points">'+d.points+'</span>';
+  html += '<span class="scoreboard_team_time_spent">'+Math.round(d.time_spent/1000)+'</span>';
+  html += '<span class="scoreboard_team_points">'+d.points+'<span class="scoreboard_team_fracs">.'+(frac < 10 ? '00'+frac : (frac < 100 ? '0' + frac : frac))+'</span></span>';
   html += '<span class="scoreboard_team_controls"><span class="scoreboard_edit_team"></span><span class="scoreboard_delete_team"></span></span>';
 
   el
     .classed('scoreboard_team', true)
     .classed('scoreboard_team_mine', isMe)
+    .classed('scoreboard_team_has_focus', d.visibility)
     .attr('id', 'scoreboard_team_'+d.login)
     .html(html);
 }
@@ -569,7 +575,7 @@ Game.prototype._renderTimer = function Game__renderTimer()
   }
 
   // be lazy
-  if (this._lastTick == this.timerCounting.tick) return;
+  if (this._lastTick === this.timerCounting.tick) return;
   this._lastTick = this.timerCounting.tick;
 
   leftover = 59-(this.timerCounting.tick || 0);

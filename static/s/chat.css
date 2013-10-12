@@ -68,6 +68,11 @@
   background-color: #f9f9f9;
   white-space: pre-line;
   z-index: 0;
+
+  -moz-user-select: text;
+  -webkit-user-select: text;
+  -ms-user-select: text;
+  user-select: text;
 }
   .chat_message_user + .chat_message_text
   {
@@ -155,11 +160,12 @@
   {
     content: "quiet\0aplease\0a\0a";
     display: inline-block;
-    font-size: 16px;
+    font-family: "Ubuntu", sans-serif;
+    font-size: 24px;
     color: #cccccc;
     vertical-align: middle;
     white-space: pre;
-    text-transform: uppercase;
+    opacity: 0.5;
   }
 .chat_messagebox
 {
@@ -169,8 +175,13 @@
   font-size: 12px;
   text-align: left;
   border: 1px solid #cccccc;
-  border-radius: 4px 4px 0px 4px;
+  border-radius: 4px;
   resize: none;
+
+  -moz-user-select: text;
+  -webkit-user-select: text;
+  -ms-user-select: text;
+  user-select: text;
 }
 
 .chat_control

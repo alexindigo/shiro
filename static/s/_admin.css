@@ -212,6 +212,19 @@
   content: "add new team";
 }
 
+.scoreboard_team_points,
+.scoreboard_team_time_spent
+{
+  display: inline-block;
+  min-width: 0px;
+  width: 50%;
+}
+.scoreboard_team_time_spent
+{
+  color: #999999;
+}
+
+
 .scoreboard_team_controls
 {
   display: none;

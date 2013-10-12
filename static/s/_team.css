@@ -1,0 +1,87 @@
+.answer_form
+{
+  position: relative;
+  display: inline-block;
+  width: 90%;
+  height: 70%;
+  margin-top: 2%;
+  vertical-align: middle;
+  z-index: 1;
+}
+
+.answer_form_messagebox
+{
+  display: inline-block;
+  width: 100%;
+  height: 100%;
+  padding: 10px;
+  font-family: "Ubuntu", sans-serif;
+  font-size: 14px;
+  text-align: left;
+  border: 1px solid #cccccc;
+  border-radius: 4px;
+  background-color: #ffffff;
+  resize: none;
+
+  -moz-user-select: text;
+  -webkit-user-select: text;
+  -ms-user-select: text;
+  user-select: text;
+}
+.answer_form_control
+{
+  position: absolute;
+  right: 0px;
+  bottom: 10px;
+  margin: 7px 10px 0px;
+  padding: 5px 15px;
+  font-family: 'Ubuntu Condensed', sans-serif;
+  font-size: 14px;
+  color: #999999;
+  border: 1px solid #dddddd;
+  border-radius: 4px;
+  background-color: #ffffff;
+  cursor: pointer;
+}
+  .answer_form_control:hover
+  {
+    color: #333333;
+    border-color: #999999;
+  }
+
+/* has focus */
+
+.answer_form:before
+{
+  content: "";
+  position: absolute;
+  display: block;
+  top: -17px;
+  right: 5px;
+  width: 8px;
+  height: 8px;
+  border-radius: 8px;
+  background-color: #dd3333;
+  box-shadow: 0px 0px 5px #dd3333;
+}
+  .answer_form.answer_form_has_focus:before
+  {
+    background-color: #33dd33;
+    box-shadow: 0px 0px 5px #33dd33;
+  }
+.answer_form:after
+{
+  content: "Game window is not in focus";
+  position: absolute;
+  display: block;
+  top: -20px;
+  right: 20px;
+  font-size: 12px;
+  color: #555555;
+  text-align: right;
+}
+  .answer_form.answer_form_has_focus:after
+  {
+    content: "Game window is in focus";
+    color: #999999;
+  }

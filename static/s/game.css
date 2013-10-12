@@ -253,6 +253,14 @@
 {
   border-bottom: 1px solid #cccccc;
 }
+.scoreboard_team_fracs
+{
+  position: absolute;
+  display: inline-block;
+  margin-top: 2px;
+  font-size: 14px;
+  color: #999999;
+}
 
 /* shared question & scoreboard panels */
 
@@ -297,6 +305,10 @@
   color: #000000;
   white-space: pre-line;
   pointer-events: none;
+  -moz-user-select: none;
+  -webkit-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
 }
 /* hide text */
 .question:after
@@ -348,7 +360,11 @@
   bottom: 2%;
   width: auto;
   height: 20%;
-  border-top: 1px solid #cccccc;
+  background-image: -webkit-linear-gradient(left, rgba(204,204,204, 0), rgba(204, 204, 204, 0) 1.4%, rgba(204, 204, 204, 0.1) 2%, rgba(204, 204, 204, 1) 3.6%, rgba(204, 204, 204, 1) 96.4%, rgba(204, 204, 204, 0.1) 98%, rgba(204, 204, 204, 0) 98.6%, rgba(204,204,204, 0) 100%);
+  background-image: -moz-linear-gradient(left, rgba(204,204,204, 0), rgba(204, 204, 204, 0) 1.4%, rgba(204, 204, 204, 0.1) 2%, rgba(204, 204, 204, 1) 3.6%, rgba(204, 204, 204, 1) 96.4%, rgba(204, 204, 204, 0.1) 98%, rgba(204, 204, 204, 0) 98.6%, rgba(204,204,204, 0) 100%);
+  background-image: linear-gradient(left, rgba(204,204,204, 0), rgba(204, 204, 204, 0) 1.4%, rgba(204, 204, 204, 0.1) 2%, rgba(204, 204, 204, 1) 3.6%, rgba(204, 204, 204, 1) 96.4%, rgba(204, 204, 204, 0.1) 98%, rgba(204, 204, 204, 0) 98.6%, rgba(204,204,204, 0) 100%);
+  background-position: 0px 0px;
+  background-size: 100% 1px;
   text-align: center;
 }
 .answer:before
@@ -366,6 +382,10 @@
   height: auto;
   vertical-align: middle;
   pointer-events: none;
+  -moz-user-select: none;
+  -webkit-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
 }
 
 /* hide text */

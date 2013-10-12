@@ -379,11 +379,12 @@ Game.prototype._drawTeamStub = function Game__drawTeamStub(_game, d)
   // this here is a DOM element
   var el   = _game.d3.select(this)
     , isMe = (_game.user() && d.login == _game.user().login)
-    , html = '';
+    , frac = d.time_spent ? Math.round(d.time_spent / (d.points * 60000) * 1000) : 0
+    , html = ''
     ;
 
   html += '<span class="scoreboard_team_name">'+d.name+'</span>';
-  html += '<span class="scoreboard_team_points">'+d.points+'</span>';
+  html += '<span class="scoreboard_team_points">'+d.points+'<span class="scoreboard_team_fracs">.'+(frac < 10 ? '00'+frac : (frac < 100 ? '0' + frac : frac))+'</span></span>';
 
   el
     .classed('scoreboard_team', true)
@@ -457,7 +458,7 @@ Game.prototype._renderTimer = function Game__renderTimer()
   }
 
   // be lazy
-  if (this._lastTick == this.timerCounting.tick) return;
+  if (this._lastTick === this.timerCounting.tick) return;
   this._lastTick = this.timerCounting.tick;
 
   totalWidth = this.timerPanel.dim().width;

@@ -13,6 +13,11 @@
   background-position: center center; /* who uses background for tiling these days? */
   background-repeat: no-repeat;
   vertical-align: inherit;
+
+  -moz-user-select: none;
+  -webkit-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
 }
 html
 {
@@ -39,3 +44,10 @@ body>object
 {
   opacity: 0;
 }
+
+/* pre script */
+body .hidden
+{
+  display: none;
+}
+
