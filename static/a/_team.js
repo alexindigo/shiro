@@ -37,7 +37,7 @@ Game.prototype._postInit = function Game__postInit()
 
     if (answer && answer.length > 0)
     {
-      _game.socket.write({ 'team:answer': {answer: answer} });
+      _game.socket.write({ 'team:answer': {text: answer} });
     }
     else
     {

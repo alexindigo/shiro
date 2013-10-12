@@ -149,9 +149,10 @@ Game.prototype.init = function Game_init()
     }
 
 
-
+    if (!('game:timer' in data))
+    {
 console.log('game', data);
-
+    }
 
 
   });
