@@ -634,6 +634,7 @@ Game.prototype._drawTeamStub = function Game__drawTeamStub(_game, d)
   el
     .classed('scoreboard_team', true)
     .classed('scoreboard_team_mine', isMe)
+    .classed('scoreboard_team_online', d.online)
     .classed('scoreboard_team_has_focus', d.visibility)
     .attr('id', 'scoreboard_team_'+d.login)
     .html(html);

@@ -214,6 +214,27 @@
   content: "add new team";
 }
 
+.scoreboard_team:before
+{
+  content: "";
+  position: absolute;
+  display: block;
+  bottom: 12px;
+  left: 50%;
+  width: 8px;
+  height: 8px;
+  margin-left: -4px;
+  border-radius: 8px;
+}
+  .scoreboard_team.scoreboard_team_online:before
+  {
+    background-color: #dd3333;
+  }
+  .scoreboard_team.scoreboard_team_online.scoreboard_team_has_focus:before
+  {
+    background-color: #33dd33;
+  }
+
 .scoreboard_team_points,
 .scoreboard_team_time_bonus
 {
@@ -282,6 +303,8 @@
   margin-top: 2%;
   border: 1px solid #cccccc;
   border-width: 1px 0px;
+  border-radius: 4px;
+  background-color: #fcfcfc;
   vertical-align: middle;
   overflow: auto;
   overflow-x: hidden;

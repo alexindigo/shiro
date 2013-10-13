@@ -148,6 +148,22 @@ Game.prototype.init = function Game_init()
       _game.display(data['game:display']);
     }
 
+    // [game:team]
+    if (data['game:team'])
+    {
+      _game.teamOnline(data['game:team'], true);
+    }
+    // [game:left]
+    if (data['game:left'])
+    {
+      _game.teamOnline(data['game:left'], false);
+    }
+
+    // [team:visibility]
+    if (data['team:visibility'])
+    {
+      _game.teamVisibility(data['team:visibility']);
+    }
 
 if (!('game:timer' in data))
 {
@@ -351,6 +367,33 @@ Game.prototype.display = function Game_display(data)
     this.questionText.html('');
   }
 }
+// Updates team's online status
+Game.prototype.teamOnline = function Game_teamOnline(data, online)
+{
+  if (arguments.length < 2)
+  {
+    online = true;
+  }
+
+  if (typeof data != 'object' || !data.login)
+  {
+    return;
+  }
+
+  $('#scoreboard_team_'+data.login)[online ? 'addClass' : 'removeClass']('scoreboard_team_online');
+}
+
+
+// Updates team's visibility status
+Game.prototype.teamVisibility = function Game_teamVisibility(data)
+{
+  if (typeof data != 'object' || !data.team || !('visibility' in data))
+  {
+    return;
+  }
+
+  $('#scoreboard_team_'+data.team)[data.visibility ? 'addClass' : 'removeClass']('scoreboard_team_has_focus');
+}
 
 // --- demi-private methods
 
@@ -392,6 +435,8 @@ Game.prototype._drawTeamStub = function Game__drawTeamStub(_game, d)
   el
     .classed('scoreboard_team', true)
     .classed('scoreboard_team_mine', isMe)
+    .classed('scoreboard_team_online', d.online)
+    .classed('scoreboard_team_has_focus', d.visibility)
     .attr('id', 'scoreboard_team_'+d.login)
     .html(html);
 }

@@ -239,7 +239,12 @@
   position: relative;
   display: inline-block;
   margin: 10px 15px;
+  opacity: 0.5;
 }
+  .scoreboard_team.scoreboard_team_online
+  {
+    opacity: 1;
+  }
 
 .scoreboard_team_name,
 .scoreboard_team_points
