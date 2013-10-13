@@ -751,8 +751,6 @@ Game.prototype._drawTeamAnswerStub = function Game__drawTeamAnswerStub(_game, d)
     , html   = ''
     ;
 
-var sample = 'Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated';
-
   // add zeros to the end
   permile = permile < 10 ? permile + '00' : (permile < 100 ? permile + '0' : permile);
 
