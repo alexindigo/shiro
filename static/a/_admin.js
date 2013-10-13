@@ -626,8 +626,6 @@ Game.prototype._drawTeamStub = function Game__drawTeamStub(_game, d)
 
   bonus = bonus < 10 ? '0'+bonus : ''+bonus;
 
-console.log(['bous', bonus, d, d.login, _game.teams]);
-
   html += '<span class="scoreboard_team_name">'+d.name+'</span>';
   html += '<span class="scoreboard_team_time_bonus">:'+bonus+'</span>';
   html += '<span class="scoreboard_team_points">'+d.points+'<span class="scoreboard_team_fracs">.'+(frac < 10 ? '00'+frac : (frac < 100 ? '0' + frac : frac))+'</span></span>';
