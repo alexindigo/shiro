@@ -5,11 +5,6 @@ Game.prototype._postInit = function Game__postInit()
 {
   var _game = this;
 
-  // --- local cache
-
-  // keep track of answered questions
-  this.answered = {};
-
   // --- local events
 
   // window has focus event
@@ -87,25 +82,12 @@ Game.prototype._postInit = function Game__postInit()
 
     // --- team
 
-    // [team:answer]
-    if (data['team:answer'])
-    {
-      // only deal with this team's events
-      if (!_game.user() || _game.user().login != data['team:answer'].team) return;
-
-      // update cache
-      _game.answered[data['team:answer'].question] = data['team:answer'].spend;
-
-      $('.answer_form').hide();
-      $('.answer_form_messagebox')[0].value = '';
-    }
-
     // [team:error]
     if (data['team:error'])
     {
       if (_game._chat)
       {
-        _game._chat.addSystemMessage('Error: '+data['team:error'].err.message+'.', 'team');
+        _game._chat.addSystemMessage('Error: '+data['team:error'].err.message+'.', 'error');
       }
     }
 
@@ -199,7 +181,14 @@ Game.prototype._team_commonUpdateTimer = Game.prototype.updateTimer;
 // do custom thing and proceed to the original version
 Game.prototype.updateTimer = function Game_updateTimer(timer)
 {
-  if (timer && !(this.questionInPlay in this.answered))
+  var team;
+
+  if (!this.user() || !this.user().login || !(team = this.getTeam(this.user().login)))
+  {
+    return this._team_commonUpdateTimer(timer);
+  }
+
+  if (timer && !(this.questionInPlay in team.answers))
   {
     // John and Mary Case decided to name their son Justin
     $('.answer_text').hide();
@@ -208,27 +197,12 @@ Game.prototype.updateTimer = function Game_updateTimer(timer)
   else
   {
     $('.answer_form').hide();
+    $('.answer_form_messagebox')[0].value = '';
   }
 
   return this._team_commonUpdateTimer(timer);
 }
 
-// modifications to state controller
-Game.prototype._team_commonSetTeams = Game.prototype.setTeams;
-// do custom thing and proceed to the original version
-Game.prototype.setTeams = function Game_setTeams(teams)
-{
-  var login
-    , teamData
-    ;
-
-  if (this.user() && (login = this.user().login) && (teamData = $.find(teams, {login: login})) )
-  {
-    this.answered = $.transform(teamData.answers, function(result, item, key){ result[key] = item.spent; });
-  }
-
-  return this._team_commonSetTeams(teams);
-}
 
 // visibility change subroutine
 function visibilityChange(callback)

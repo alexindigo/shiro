@@ -12,12 +12,21 @@ Game.prototype._postInit = function Game__postInit()
   // socket callback pool
   this._callbackPool = {};
 
+  // prepare stub methods
+  this._drawTeamAnswer = $.partial(this._drawTeamAnswerStub, this);
+  this._sortTeamAnswer = $.partial(this._sortTeamAnswerStub, this);
+
   // --- add extra containers
 
   // global var – containerGameplay, set in admin.html
   this.gameplay = typeof containerGameplay == 'string' ? $(containerGameplay) : containerGameplay;
   // d3
   this._gameplayContainer = this.d3.select(this.gameplay[0]);
+
+  // teams' answers
+  this.teamsAnswersPanel = $('.answer_teams');
+  // d3
+  this._teamsAnswersContainer = this.d3.select(this.teamsAnswersPanel[0]);
 
   // --- add extra events
 
@@ -53,6 +62,14 @@ Game.prototype._postInit = function Game__postInit()
     if (data['game:logged'])
     {
       _game._logged(data['game:logged']);
+    }
+
+    // [game:current_question]
+    // ['game:team_updated']
+    // redraw teams answers
+    if (data['game:current_question'] || data['game:team_updated'])
+    {
+      _game._displayTeamsAnswers();
     }
 
     // [admin:error]
@@ -178,6 +195,33 @@ Game.prototype._postInit = function Game__postInit()
     _game.showAnswer(question);
   });
 
+  this.teamsAnswersPanel.on('click', '.answer_teams_team_correct', function(e)
+  {
+    var el   = $(this)
+      , team = el.parents('.answer_teams_team').attr('id').replace(/^answer_teams_team_/, '')
+      ;
+
+    if (!team) return;
+
+    e.stop();
+
+    _game.evalAnswer(team, 'correct');
+  });
+
+  this.teamsAnswersPanel.on('click', '.answer_teams_team_wrong', function(e)
+  {
+    var el   = $(this)
+      , team = el.parents('.answer_teams_team').attr('id').replace(/^answer_teams_team_/, '')
+      ;
+
+    if (!team) return;
+
+    e.stop();
+
+    _game.evalAnswer(team, 'wrong');
+  });
+
+
   // --- Modals
 
   // create auth prompt
@@ -221,7 +265,7 @@ Game.prototype._postInit = function Game__postInit()
       {name: 'name', title: 'team'},
       {name: 'password', title: 'password'},
       {name: 'points', title: 'points'},
-      {name: 'time_spent', title: 'time spent'}
+      {name: 'time_bonus', title: 'time bonus'}
     ],
     controls:
     [
@@ -274,7 +318,21 @@ Game.prototype._postInit = function Game__postInit()
       {action: 'cancel', title: 'cancel'}
     ]
   });
+}
+// end of init
 
+// Sets customed for admin current game state
+Game.prototype._admin_commonSetTeams = Game.prototype.setTeams;
+
+Game.prototype.setTeams = function Game_setTeams(teams)
+{
+  // first do everythign else
+  var result = this._admin_commonSetTeams(teams);
+
+  // teams' answers
+  this._displayTeamsAnswers();
+
+  return result;
 }
 
 Game.prototype.startStopTimer = function Game_startStopTimer()
@@ -308,6 +366,44 @@ Game.prototype.showAnswer = function Game_showAnswer(index)
   this.socket.write({ 'admin:show_answer': {index: index} });
 }
 
+Game.prototype.evalAnswer = function Game_evalAnswer(team, status)
+{
+  var question;
+
+  // no current question, team or status, bye bye
+  if (!team || !status || !(question = this.questionInPlay)) return;
+
+  this.socket.write({ 'admin:eval_answer': {question: question, team: team, status: status} });
+}
+
+// shows answers for the current questions
+Game.prototype._displayTeamsAnswers = function Game__displayTeamsAnswers(show)
+{
+  var _game = this
+    , teams
+    ;
+
+  if (arguments.length < 1)
+  {
+    show = true;
+  }
+
+  // sanity check
+  if (!show || !this.questionInPlay)
+  {
+    this.teamsAnswersPanel.hide();
+    return;
+  }
+  else
+  {
+    this.teamsAnswersPanel.show();
+  }
+
+  // get only ones answered
+  teams = $.filter(this.teams, function(t){ return t.answers && t.answers[_game.questionInPlay]; });
+
+  this._renderTeamsAnswers(teams);
+}
 
 // --- toggles team modals on/off
 
@@ -523,12 +619,17 @@ Game.prototype._drawTeamStub = function Game__drawTeamStub(_game, d)
   // this here is a DOM element
   var el   = _game.d3.select(this)
     , isMe = (_game.user() && d.login == _game.user().login)
-    , frac = d.time_spent && d.points ? Math.round(d.time_spent / (d.points * 60000) * 1000) : 0
+    , frac = d.time_bonus && d.points ? Math.round(d.time_bonus / (d.points * 60000) * 1000) : 0
+    , bonus = Math.round(d.time_bonus/1000)
     , html = ''
     ;
 
+  bonus = bonus < 10 ? '0'+bonus : ''+bonus;
+
+console.log(['bous', bonus, d, d.login, _game.teams]);
+
   html += '<span class="scoreboard_team_name">'+d.name+'</span>';
-  html += '<span class="scoreboard_team_time_spent">'+Math.round(d.time_spent/1000)+'</span>';
+  html += '<span class="scoreboard_team_time_bonus">:'+bonus+'</span>';
   html += '<span class="scoreboard_team_points">'+d.points+'<span class="scoreboard_team_fracs">.'+(frac < 10 ? '00'+frac : (frac < 100 ? '0' + frac : frac))+'</span></span>';
   html += '<span class="scoreboard_team_controls"><span class="scoreboard_edit_team"></span><span class="scoreboard_delete_team"></span></span>';
 
@@ -591,6 +692,91 @@ Game.prototype._renderTimer = function Game__renderTimer()
   {
     $('.gameplay_start_timer').removeClass('timer_running_out');
   }
+}
+
+// Draws teams' answers panel
+Game.prototype._renderTeamsAnswers = function Game__renderTeamsAnswers(teams)
+{
+  var _game = this
+    , item
+    ;
+
+  // cleanup
+  // TODO: Fix it properly
+  this.teamsAnswersPanel.html('');
+
+  item = this._teamsAnswersContainer.selectAll('.answer_teams_team')
+    .data(teams, function(d){ return d.login; })
+    .sort(this._sortTeamAnswer)
+    .each(this._drawTeamAnswer)
+    ;
+
+  item.enter().append('span')
+    .sort(this._sortTeamAnswer)
+    .each(this._drawTeamAnswer)
+    ;
+
+  item.exit()
+    .remove()
+    ;
+}
+
+Game.prototype._sortTeamAnswerStub = function Game__sortTeamAnswerStub(_game, a, b)
+{
+  var answerA = a.answers[_game.questionInPlay]
+    , answerB = b.answers[_game.questionInPlay]
+    , evaluatedA = typeof answerA.correct == 'boolean'
+    , evaluatedB = typeof answerB.correct == 'boolean'
+    , evaluated  = 0
+    ;
+
+  if (evaluatedA && !evaluatedB)
+  {
+    evaluated = 1;
+  }
+  else if (!evaluatedA && evaluatedB)
+  {
+    evaluated = -1;
+  }
+
+  return evaluated ? evaluated : (answerB.bonus - answerA.bonus);
+}
+
+Game.prototype._drawTeamAnswerStub = function Game__drawTeamAnswerStub(_game, d)
+{
+  // this here is a DOM element
+  var el     = _game.d3.select(this)
+    , answer = d.answers[_game.questionInPlay]
+    , seconds = answer.time[0] < 10 ? '0'+answer.time[0] : answer.time[0]
+    , permile = Math.floor(answer.time[1]/1e6)
+    , html   = ''
+    ;
+
+var sample = 'Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated';
+
+  // add zeros to the end
+  permile = permile < 10 ? permile + '00' : (permile < 100 ? permile + '0' : permile);
+
+  html += '<button class="answer_teams_control answer_teams_team_correct'+(answer.correct === true ? ' answer_teams_control_selected' : '')+'"></button>'
+
+  if (typeof answer.correct == 'boolean')
+  {
+    html += '<span class="answer_teams_team_name">'+d.name+'</span>';
+  }
+  else
+  {
+    html += '<span class="answer_teams_team_time">:'+seconds+'<span class="answer_teams_team_time_permile">.'+permile+'</span></span>';
+  }
+
+  html += '<span class="answer_teams_team_answer">'+(answer.text || sample) +'</span>';
+  html += '<button class="answer_teams_control answer_teams_team_wrong'+(answer.correct === false ? ' answer_teams_control_selected' : '')+'"></button>'
+
+  el
+    .classed('answer_teams_team', true)
+    .classed('answer_teams_team_evaluated', typeof answer.correct == 'boolean')
+    .classed('answer_teams_team_evaluated_correct', answer.correct)
+    .attr('id', 'answer_teams_team_'+d.login)
+    .html(html);
 }
 
 // -- Santa's little helpers

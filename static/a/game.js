@@ -80,9 +80,9 @@ Game.prototype.init = function Game_init()
         _game.user(false);
       }
 
-      _game.setTeams(data.game.teams);
       _game.setQuestions(data.game.questions);
       _game.setState(data.game.state);
+      _game.setTeams(data.game.teams);
     }
 
     // [game:error]
@@ -149,10 +149,10 @@ Game.prototype.init = function Game_init()
     }
 
 
-    if (!('game:timer' in data))
-    {
+if (!('game:timer' in data))
+{
 console.log('game', data);
-    }
+}
 
 
   });
@@ -187,11 +187,6 @@ Game.prototype.instance = function Game_instance(value)
   return $.cookie('game:instance');
 }
 
-Game.prototype.getTeam = function Game_getTeam(handle)
-{
-  return $.find(this.teams, {login: handle});
-}
-
 // Attaches reference to known external objects
 Game.prototype.attach = function Game_attach(collection)
 {
@@ -201,6 +196,13 @@ Game.prototype.attach = function Game_attach(collection)
     this._chat = collection['chat'];
   }
 }
+
+// Fetches team object
+Game.prototype.getTeam = function Game_getTeam(handle)
+{
+  return $.find(this.teams, {login: handle});
+}
+
 
 // more meaningful methods
 
@@ -380,7 +382,7 @@ Game.prototype._drawTeamStub = function Game__drawTeamStub(_game, d)
   // this here is a DOM element
   var el   = _game.d3.select(this)
     , isMe = (_game.user() && d.login == _game.user().login)
-    , frac = d.time_spent ? Math.round(d.time_spent / (d.points * 60000) * 1000) : 0
+    , frac = d.time_bonus && d.points ? Math.round(d.time_bonus / (d.points * 60000) * 1000) : 0
     , html = ''
     ;
 
@@ -500,8 +502,8 @@ Game.prototype._sortTeams = function Game__sortTeams(a, b)
   // check points first
   if ((comp = b.points - a.points) == 0)
   {
-    // check time_spent
-    if ((comp = b.time_spent - a.time_spent) == 0)
+    // check time_bonus
+    if ((comp = b.time_bonus - a.time_bonus) == 0)
     {
       // check names
       comp = (a.name < b.name ? -1 : (a.name > b.name ? 1 : 0));

@@ -42,6 +42,7 @@
   .gameplay_question.gameplay_question_played:before
   {
     background-color: #dd3333;
+    opacity: 0.3;
   }
   /* turn off user level stuff */
   .gameplay_question:after
@@ -65,6 +66,7 @@
     border-color: #fe6c1d transparent transparent transparent;
     border-radius: 0px;
     background-color: transparent;
+    opacity: 1;
   }
 
 .gameplay_question_controls
@@ -156,7 +158,7 @@
   color: #cccccc;
   border: 1px solid transparent;
   border-radius: 4px;
-  background-color: #ffffff;
+  background-color: transparent;
   cursor: pointer;
 }
   .scoreboard_control:hover,
@@ -213,17 +215,16 @@
 }
 
 .scoreboard_team_points,
-.scoreboard_team_time_spent
+.scoreboard_team_time_bonus
 {
   display: inline-block;
   min-width: 0px;
   width: 50%;
 }
-.scoreboard_team_time_spent
+.scoreboard_team_time_bonus
 {
   color: #999999;
 }
-
 
 .scoreboard_team_controls
 {
@@ -269,4 +270,162 @@
 .scoreboard_delete_team:before
 {
   content: "delete";
+}
+
+/* answers */
+.answer_teams
+{
+  position: relative;
+  display: inline-block;
+  width: 90%;
+  height: 80%;
+  margin-top: 2%;
+  border: 1px solid #cccccc;
+  border-width: 1px 0px;
+  vertical-align: middle;
+  overflow: auto;
+  overflow-x: hidden;
+  overflow-y: auto;
+  z-index: 1;
+}
+
+.answer_teams_team
+{
+  position: relative;
+  display: block;
+  min-height: 30px;
+  padding: 5px 75px;
+  line-height: 18px;
+  color: #999999;
+  text-align: left;
+  background-color: #fcfcfc;
+}
+  .answer_teams_team:nth-child(2n+1)
+  {
+    background-color: #f4f4f4;
+  }
+  .answer_teams_team:hover
+  {
+    background-color: #e8e8e8;
+    color: #000000;
+  }
+  /* evaluated/not-evaluated divide */
+  .answer_teams_team:not(.answer_teams_team_evaluated) + .answer_teams_team.answer_teams_team_evaluated
+  {
+    margin-top: 30px;
+  }
+  .answer_teams_team:not(.answer_teams_team_evaluated) + .answer_teams_team.answer_teams_team_evaluated:before
+  {
+    content: "evaluated";
+    position: absolute;
+    display: block;
+    top: -29px;
+    left: 0px;
+    width: 100%;
+    height: 28px;
+    line-height: 28px;
+    font-family: "Ubuntu", sans-serif;
+    font-size: 14px;
+    border-top: 1px solid #555555;
+    color: #cccccc;
+    text-align: center;
+  }
+
+.answer_teams_team:not(.answer_teams_team_evaluated)
+{
+  border-left: 2px solid #333333;
+}
+.answer_teams_team.answer_teams_team_evaluated
+{
+  border-left: 2px solid #dd3333;
+}
+.answer_teams_team.answer_teams_team_evaluated_correct
+{
+  border-color: #33dd33;
+}
+
+.answer_teams_control
+{
+  position: absolute;
+  top: 4px;
+  padding: 3px 12px;
+  font-family: 'Ubuntu Condensed', sans-serif;
+  font-size: 12px;
+  color: #cccccc;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  background-color: transparent;
+  cursor: pointer;
+}
+  .answer_teams_control:hover
+  {
+    color: #333333;
+    border-color: #999999;
+  }
+  .answer_teams_control.answer_teams_control_selected
+  {
+    color: #fe6c1d;
+    border-color: transparent;
+    pointer-events: none;
+  }
+
+.answer_teams_team_correct
+{
+  left: 5px;
+}
+.answer_teams_team_correct:before
+{
+  content: "correct";
+}
+
+.answer_teams_team_wrong
+{
+  right: 5px;
+}
+.answer_teams_team_wrong:before
+{
+  content: "wrong";
+}
+
+  .answer_teams_team:hover .answer_teams_control:not(.answer_teams_control_selected)
+  {
+    color: #999999;
+  }
+  .answer_teams_team .answer_teams_control:hover
+  {
+    color: #000000;
+  }
+
+.answer_teams_team_time
+{
+  display: inline-block;
+  height: 100%;
+  font-size: 18px;
+  min-width: 50px;
+  margin-right: 10px;
+}
+
+.answer_teams_team_name
+{
+  display: inline-block;
+  font-size: 14px;
+  margin-right: 10px;
+}
+.answer_teams_team_name:after
+{
+  content: ":";
+}
+
+.answer_teams_team_time_permile
+{
+  position: absolute;
+  display: inline-block;
+  margin-top: 2px;
+  font-size: 14px;
+  color: #aaaaaa;
+}
+
+.answer_teams_team_answer
+{
+  font-size: 14px;
 }
