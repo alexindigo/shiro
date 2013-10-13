@@ -311,6 +311,21 @@
   overflow-y: auto;
   z-index: 1;
 }
+.answer_teams_stats
+{
+  position: absolute;
+  display: block;
+  bottom: -12px;
+  right: 5%;
+  margin-right: 5px;
+  line-height: 20px;
+  font-size: 12px;
+  color: #999999;
+}
+.answer_teams_stats:before
+{
+  content: "Evaluated " attr(data-evaluated) " out of " attr(data-answers) " answers, from  " attr(data-teams) " teams";
+}
 
 .answer_teams_team
 {

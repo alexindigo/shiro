@@ -700,6 +700,12 @@ Game.prototype._renderTeamsAnswers = function Game__renderTeamsAnswers(teams)
     , item
     ;
 
+  // update stats
+  // TODO: Make it sanely
+  $('.answer_teams_stats').attr('data-teams', this.teams.length);
+  $('.answer_teams_stats').attr('data-answers', '0');
+  $('.answer_teams_stats').attr('data-evaluated', '0');
+
   // cleanup
   // TODO: Fix it properly
   this.teamsAnswersPanel.html('');
@@ -749,7 +755,12 @@ Game.prototype._drawTeamAnswerStub = function Game__drawTeamAnswerStub(_game, d)
     , seconds = answer.time[0] < 10 ? '0'+answer.time[0] : answer.time[0]
     , permile = Math.floor(answer.time[1]/1e6)
     , html   = ''
+    , statsPanel = $('.answer_teams_stats')
     ;
+
+  // update stats
+  statsPanel.attr('data-answers', +(statsPanel.attr('data-answers') || 0) + 1);
+  statsPanel.attr('data-evaluated', +(statsPanel.attr('data-evaluated') || 0) + (typeof answer.correct == 'boolean' ? 1 : 0));
 
   // add zeros to the end
   permile = permile < 10 ? permile + '00' : (permile < 100 ? permile + '0' : permile);
@@ -765,7 +776,7 @@ Game.prototype._drawTeamAnswerStub = function Game__drawTeamAnswerStub(_game, d)
     html += '<span class="answer_teams_team_time">:'+seconds+'<span class="answer_teams_team_time_permile">.'+permile+'</span></span>';
   }
 
-  html += '<span class="answer_teams_team_answer">'+(answer.text || sample) +'</span>';
+  html += '<span class="answer_teams_team_answer">'+(answer.text || '[no answer]') +'</span>';
   html += '<button class="answer_teams_control answer_teams_team_wrong'+(answer.correct === false ? ' answer_teams_control_selected' : '')+'"></button>'
 
   el
