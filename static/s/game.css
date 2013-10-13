@@ -383,7 +383,7 @@
 .answer_text
 {
   display: inline-block;
-  width: auto;
+  width: 90%;
   height: auto;
   vertical-align: middle;
   pointer-events: none;

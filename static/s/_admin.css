@@ -322,7 +322,7 @@
   font-size: 12px;
   color: #999999;
 }
-.answer_teams_stats:before
+.answer_teams_stats[data-answers]:before
 {
   content: "Evaluated " attr(data-evaluated) " out of " attr(data-answers) " answers, from  " attr(data-teams) " teams";
 }

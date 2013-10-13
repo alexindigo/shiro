@@ -186,13 +186,20 @@ Game.prototype._postInit = function Game__postInit()
   {
     var el       = $(this)
       , question = el.parents('.gameplay_question').attr('id').replace(/^gameplay_question_/, '')
+      , show     = true
       ;
 
     if (!question) return;
 
     e.stop();
 
-    _game.showAnswer(question);
+    // check if reverse action is needed
+    if (_game.answerText.css('display') != 'none')
+    {
+      show = false;
+    }
+
+    _game.showAnswer(question, show);
   });
 
   this.teamsAnswersPanel.on('click', '.answer_teams_team_correct', function(e)
@@ -361,9 +368,14 @@ Game.prototype.pickQuestion = function Game_pickQuestion(index)
   }
 }
 
-Game.prototype.showAnswer = function Game_showAnswer(index)
+Game.prototype.showAnswer = function Game_showAnswer(index, show)
 {
-  this.socket.write({ 'admin:show_answer': {index: index} });
+  if (arguments.length < 2)
+  {
+    show = true;
+  }
+
+  this.socket.write({ 'admin:show_answer': {index: index, show: !!show} });
 }
 
 Game.prototype.evalAnswer = function Game_evalAnswer(team, status)
@@ -392,6 +404,11 @@ Game.prototype._displayTeamsAnswers = function Game__displayTeamsAnswers(show)
   if (!show || !this.questionInPlay)
   {
     this.teamsAnswersPanel.hide();
+
+    $('.answer_teams_stats').removeAttr('data-teams');
+    $('.answer_teams_stats').removeAttr('data-answers');
+    $('.answer_teams_stats').removeAttr('data-evaluated');
+
     return;
   }
   else
