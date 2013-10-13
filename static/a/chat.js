@@ -371,8 +371,7 @@ Chat.prototype._renderMessages = function Chat__renderMessages()
   // scroll to the last message
   setTimeout(function()
   {
-    document.body.scrollTop = 1;
-    document.body.scrollTop = document.body.scrollHeight;
+    window.scrollTo(0, $.doc().height);
   }, 300);
 
 }
