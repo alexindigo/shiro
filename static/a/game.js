@@ -30,6 +30,9 @@ function Game(options)
   // question drawing function
   this._drawQuestion = $.partial(this._drawQuestionStub, this);
 
+  // team answer chart
+  this._drawTeamAnswerChart = $.partial(this._drawTeamAnswerChartStub, this);
+
   // -- gameplay
 
   // d3
@@ -165,6 +168,16 @@ Game.prototype.init = function Game_init()
       _game.teamVisibility(data['team:visibility']);
     }
 
+
+    // [game:current_question]
+    // ['game:team_updated']
+    // redraw teams chart
+    if (data['game:current_question'] || data['game:team_updated'])
+    {
+      _game._displayTeamsChart();
+    }
+
+
 if (!('game:timer' in data))
 {
 console.log('game', data);
@@ -251,6 +264,9 @@ Game.prototype.setTeams = function Game_setTeams(teams)
 {
   this.teams = teams;
   this._renderTeams();
+
+  // display answers stats chart
+  this._displayTeamsChart();
 }
 
 Game.prototype.addQuestion = function Game_addQuestion(question)
@@ -538,6 +554,81 @@ Game.prototype._renderTimer = function Game__renderTimer()
   item.exit()
     .remove()
     ;
+}
+
+// TODO: Make it less of a hack
+Game.prototype._displayTeamsChart = function Game__displayTeamsChart()
+{
+  var _game = this
+    , item
+    , d3 = this.d3
+    , panel = $('.answer_teams_chart')
+    , width = 100 / this.teams.length
+    , teams = $.sortBy(this.teams, 'name')
+    ;
+
+  // sanity check
+  if (!this.questionInPlay)
+  {
+    panel.hide();
+    return;
+  }
+  else
+  {
+    panel.show();
+  }
+
+  if (!this._chartBase)
+  {
+    this._chartBase = this._createChartBase(panel);
+  }
+
+  item = this._chartBase.selectAll('.answer_teams_chart_team')
+    .data(teams, function(d){ return d.login; })
+    .order()
+    .style('width', width+'%')
+    .each(this._drawTeamAnswerChart)
+    ;
+
+  item.enter().append('span')
+    .order()
+    .style('width', width+'%')
+    .each(this._drawTeamAnswerChart)
+    ;
+
+  item.exit()
+    .remove()
+    ;
+}
+
+Game.prototype._drawTeamAnswerChartStub = function Game__drawTeamAnswerChartStub(_game, d)
+{
+  var el      = _game.d3.select(this)
+    , answer  = d.answers[_game.questionInPlay]
+    , time    = answer && answer.time ? answer.time[0] : 0
+    , html    = ''
+    ;
+
+  html += '<span class="answer_teams_chart_team_name">'+d.name+'</span>';
+  html += '<span style="height: '+(time / 60 * 100)+'%" class="answer_teams_chart_team_bar"></span>';
+
+  el
+    .classed('answer_teams_chart_team', true)
+    .classed('answer_teams_chart_team_correct', answer && typeof answer.correct == 'boolean' && answer.correct)
+    .classed('answer_teams_chart_team_wrong', answer && typeof answer.correct == 'boolean' && !answer.correct)
+    .html(html)
+    ;
+}
+
+Game.prototype._createChartBase = function Game__createChartBase(panel)
+{
+  var chart = this.d3.select(panel[0])
+    ;
+
+  // create Y-axis
+  panel.html('<span class="answer_teams_chart_axis_y"><i>'+([60, 45, 30, 15, 0].join('</i><i>'))+'</i></span>');
+
+  return chart;
 }
 
 Game.prototype._sortTeams = function Game__sortTeams(a, b)

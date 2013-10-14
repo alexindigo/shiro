@@ -42,7 +42,7 @@
   .gameplay_question.gameplay_question_played:before
   {
     background-color: #dd3333;
-    opacity: 0.3;
+    opacity: 0; /* do not show for now */
   }
   /* turn off user level stuff */
   .gameplay_question:after
