@@ -1,7 +1,7 @@
 {
   "name": "shiro",
-  "version": "0.0.0",
-  "description": "シロ – white, also part of shirofukurou (シロフクロウ) snowy owl.",
+  "version": "0.1.0",
+  "description": "シロ – white, also part of shirofukurou (シロフクロウ) snowy owl. Online questions game management system.",
   "main": "server.js",
   "dependencies": {
     "deeply": "~0.1.0",
@@ -9,10 +9,10 @@
     "async": "~0.2.9",
     "jeesh": "~0.0.6",
     "envar": "~1.0.0",
-    "level": "~0.16.0",
-    "lodash": "~2.1.0",
+    "level": "~0.17.0",
+    "lodash": "~2.2.1",
     "reqwest": "~0.9.0",
-    "wigwam": "0.0.0",
+    "wigwam": "~0.1.0",
     "socket.io": "~0.9.16"
   },
   "devDependencies": {},
