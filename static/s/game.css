@@ -509,6 +509,7 @@
   width: auto;
   background-color: #cccccc;
   border-radius: 4px 4px 0px 0px;
+  opacity: 0.8;
 }
 
 .answer_teams_chart_team_correct .answer_teams_chart_team_bar

@@ -36,6 +36,15 @@ body
   font-family: "Ubuntu Condensed", sans-serif;
 }
 
+input,
+textarea
+{
+  -moz-user-select: text;
+  -webkit-user-select: text;
+  -ms-user-select: text;
+  user-select: text;
+}
+
 /* it just flashes there
  * if you have plugins actiation on click
  * in Google Chrome
