@@ -101,6 +101,13 @@ Game.prototype._postInit = function Game__postInit()
     _game._toggleAddTeamModal(true);
   });
 
+  // reset scoreboard
+  $('.scoreboard_reset_scoreboard').on('click', function(e)
+  {
+    e.stop();
+    _game._toggleResetScoreboardModal(true);
+  });
+
   // edit team action
   this.scoreboard.on('click', '.scoreboard_edit_team', function(e)
   {
@@ -627,8 +634,38 @@ Game.prototype._toggleDeleteQuestionModal = function Game__toggleDeleteQuestionM
   {
     this.confirmModal.deactivate();
   }
-
 }
+
+// reset scoreboard
+Game.prototype._toggleResetScoreboardModal = function Game__toggleResetScoreboardModal(show)
+{
+  var _game = this
+    ;
+
+  if (arguments.length < 1)
+  {
+    show = true;
+  }
+
+  if (show)
+  {
+    this.confirmModal.title('Are you sure you want to <i>reset</i> the scoreboard?');
+
+    this.confirmModal.activate(function(action)
+    {
+      if (action == 'yes')
+      {
+        _game.socket.write({ 'admin:reset_scoreboard': true });
+      }
+    });
+  }
+  else
+  {
+    this.confirmModal.deactivate();
+  }
+}
+
+
 
 // Custom team html element
 Game.prototype._drawTeamStub = function Game__drawTeamStub(_game, d)

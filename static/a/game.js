@@ -325,7 +325,7 @@ Game.prototype.currentQuestion = function Game_currentQuestion(index)
 Game.prototype.setState = function Game_setState(state)
 {
   // current question
-  if (state['current_question'])
+  if ('current_question' in state)
   {
     this.currentQuestion(state['current_question']);
   }

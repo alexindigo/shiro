@@ -197,6 +197,7 @@
   .gameplay_start_timer[data-timer]:before
   {
     content: "stop timer :" attr(data-timer);
+    color: #333333;
   }
 
 
@@ -212,6 +213,22 @@
 .scoreboard_add_team:before
 {
   content: "add new team";
+}
+
+.scoreboard_reset_scoreboard
+{
+  position: absolute;
+  top: 0px;
+  right: 0px;
+}
+  .scoreboard_reset_scoreboard:hover
+  {
+    color: #dd3333;
+    border-color: #dd3333;
+  }
+.scoreboard_reset_scoreboard:before
+{
+  content: "reset scoreboard";
 }
 
 .scoreboard_team:before
