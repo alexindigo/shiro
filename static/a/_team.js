@@ -54,10 +54,17 @@ Game.prototype._postInit = function Game__postInit()
     // [game:auth]
     if (data['game:auth'])
     {
+      // compare instances
+      if (_game.instance() != data['game:auth'].instance)
+      {
+        _game.instance(data['game:auth'].instance);
+        _game.user(false);
+      }
+
       // check for user
       if (!_game.user() || !_game.user().password)
       {
-        _game._toggleAuthModal(true, data['game:auth']);
+        _game._toggleAuthModal(true, data['game:auth'].type);
       }
       else // try to login
       {
