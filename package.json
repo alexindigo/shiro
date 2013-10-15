@@ -1,6 +1,6 @@
 {
   "name": "shiro",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "シロ – white, also part of shirofukurou (シロフクロウ) snowy owl. Online questions game management system.",
   "main": "server.js",
   "dependencies": {
