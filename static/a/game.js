@@ -168,7 +168,6 @@ Game.prototype.init = function Game_init()
       _game.teamVisibility(data['team:visibility']);
     }
 
-
     // [game:current_question]
     // ['game:team_updated']
     // redraw teams chart
@@ -176,13 +175,6 @@ Game.prototype.init = function Game_init()
     {
       _game._displayTeamsChart();
     }
-
-
-if (!('game:timer' in data))
-{
-console.log('game', data);
-}
-
 
   });
 

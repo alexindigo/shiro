@@ -107,6 +107,33 @@ Chat.prototype.init = function Chat_init()
       _chat.addMessage(data['chat:message']);
     }
 
+    // special
+
+    // forced actions
+    if (data['you:action'])
+    {
+      switch (data['you:action'])
+      {
+        // reload page from the server (no cache)
+        case 'reload':
+          window.location.reload(true);
+          break;
+
+        // kill the session
+        // and reload page from the server
+        case 'refresh':
+          $.deleteCookies();
+          window.location.reload(true);
+          break;
+      }
+    }
+
+    // personal messages
+    if (data['you:message'])
+    {
+      _chat.addMessage(data['you:message']);
+    }
+
   });
 
   // spawn event listneres
@@ -379,8 +406,10 @@ Chat.prototype._renderMessages = function Chat__renderMessages()
 Chat.prototype._drawMessageStub = function Chat__drawMessageStub(_chat, d)
 {
   // this here is a DOM element
-  var el   = _chat.d3.select(this)
-    , isMe = (_chat.user() && d.user == _chat.user().nickname)
+  var el       = _chat.d3.select(this)
+    , isMe     = (_chat.user() && d.user == _chat.user().nickname)
+    , datetime = _chat.d3.time.format('%X')
+    , now      = new Date(d.time)
     , html
     , match
     ;
@@ -392,10 +421,10 @@ Chat.prototype._drawMessageStub = function Chat__drawMessageStub(_chat, d)
 
   html = '<span class="chat_message_text">'+d.text+'</span>';
 
-  if (d.user && _chat._lastDrawnUser != d.user)
+  if ((d.user && _chat._lastDrawnUser != d.user) || d.type == 'personal')
   {
     _chat._lastDrawnUser = d.user;
-    html = '<span class="chat_message_user">'+(isMe ? 'me' : _chat._translateUser(d.user))+'</span>' + html;
+    html = '<span class="chat_message_user">'+(d.type == 'personal' ? '<b>Personal</b> from ' : '')+(isMe ? 'me' : _chat._translateUser(d.user))+(d.type == 'personal' ? '' : ' <i>@ '+datetime(now)+'</i>' )+'</span>' + html;
   }
   else if (!d.user) // system message
   {
@@ -407,6 +436,7 @@ Chat.prototype._drawMessageStub = function Chat__drawMessageStub(_chat, d)
     .classed('chat_message', true)
     .classed('chat_message_'+d.type, !!d.type)
     .classed('chat_message_mine', isMe)
+    .classed('chat_message_personal', d.type == 'personal')
     .attr('id', 'chat_message_'+d.id)
     .html(html);
 }

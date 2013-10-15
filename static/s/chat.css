@@ -57,6 +57,15 @@
   display: block;
   color: #cccccc;
 }
+.chat_message_user>i
+{
+  display: none;
+}
+  .chat_message_user:hover>i
+  {
+    display: inline;
+  }
+
 .chat_message_text
 {
   position: relative;
@@ -99,6 +108,20 @@
   {
     color: #aaaaaa;
     background-color: #ffffff;
+  }
+  .chat_message_personal .chat_message_text,
+  .chat_message_personal .chat_message_text:before
+  {
+    color: #fe6c1d;
+    background-color: #fadcc9;
+  }
+  .chat_message_personal .chat_message_text
+  {
+    border-color: #fe6c1d;
+  }
+  .chat_message_personal .chat_message_text:before
+  {
+    box-shadow: 1px 1px 0px #fe6c1d;
   }
 
 
