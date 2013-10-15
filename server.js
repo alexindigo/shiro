@@ -51,8 +51,8 @@ serverOptions =
   },
   websockets:
   {
-    transformer  : 'socket.io',
-//    transformer  : 'engine.io',
+//    transformer  : 'socket.io',
+    transformer  : 'engine.io',
     clientLibrary: path.join(staticPath, 'a/primus.js')
   }
 };
