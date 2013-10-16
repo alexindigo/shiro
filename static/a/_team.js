@@ -78,12 +78,56 @@ Game.prototype._postInit = function Game__postInit()
       _game._logged(data['game:logged']);
     }
 
+    // [game:error]
+    if (data['game:error'])
+    {
+      // check error code
+      // only handle 401 for now
+      switch (data['game:error'].err.code)
+      {
+        case 401:
+          _game.user(false);
+          _game._login('team');
+          break;
+      }
+
+      // check error origin
+      switch (data['game:error'].origin)
+      {
+        // handle login errors
+        case 'auth':
+          _game.user(false);
+          _game._login('team');
+          break;
+      }
+    }
+
     // [admin:error]
     if (data['admin:error'])
     {
       if (_game._chat)
       {
         _game._chat.addSystemMessage('Error: '+data['admin:error'].err.message+'.', 'error');
+      }
+
+      // check error code
+      // only handle 401 for now
+      switch (data['admin:error'].err.code)
+      {
+        case 401:
+          _game.user(false);
+          _game._login('admin');
+          break;
+      }
+
+      // check error origin
+      switch (data['admin:error'].origin)
+      {
+        // handle login errors
+        case 'auth':
+          _game.user(false);
+          _game._login('admin');
+          break;
       }
     }
 
@@ -128,6 +172,27 @@ Game.prototype._postInit = function Game__postInit()
     ]
   });
 
+}
+
+Game.prototype._login = function Game__login(type, instance)
+{
+  // if current instance is out of date
+  // reset it
+  if (instance && this.instance() != instance)
+  {
+    this.instance(instance);
+    this.user(false);
+  }
+
+  // check for user
+  if (!this.user())
+  {
+    this._toggleAuthModal(true, type);
+  }
+  else // try to login
+  {
+    this.socket.write({ 'game:auth': this.user() });
+  }
 }
 
 // handle logged event
