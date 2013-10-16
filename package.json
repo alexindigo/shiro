@@ -1,8 +1,24 @@
 {
   "name": "shiro",
-  "version": "0.1.1",
-  "description": "シロ – white, also part of shirofukurou (シロフクロウ) snowy owl. Online questions game management system.",
+  "version": "0.1.3",
+  "description": "Online quiz game engine, inspired by russian tv show 'What? Where? When?' (Million Dollar Mind Game).",
   "main": "server.js",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/alexindigo/shiro.git"
+  },
+  "keywords": [
+    "web",
+    "quiz",
+    "trivia",
+    "mind",
+    "game",
+    "engine",
+    "websockets",
+    "what where when",
+    "jeopardy",
+    "million dollar mind game"
+  ],
   "dependencies": {
     "deeply": "~0.1.0",
     "ender-js": "~0.5.0",
@@ -13,6 +29,7 @@
     "lodash": "~2.2.1",
     "reqwest": "~0.9.0",
     "wigwam": "~0.1.0",
+    "engine.io": "~0.7.9",
     "socket.io": "~0.9.16"
   },
   "devDependencies": {},

@@ -18,10 +18,11 @@ var server   = require('http').createServer()
 
   // default settings
   , defaults =
-    { port : 8500
-    , path : 'static'
-    , data : 'data'
-    , admin: 'assword' // admin password
+    { port  : 1337
+    , path  : 'static'
+    , data  : 'data'
+    , admin : 'assword' // admin password
+    , socket: 'socket.io' // --socket=engine.io as an option
     }
 
   // params handling
@@ -51,8 +52,7 @@ serverOptions =
   },
   websockets:
   {
-//    transformer  : 'socket.io',
-    transformer  : 'engine.io',
+    transformer  : envar('socket'),
     clientLibrary: path.join(staticPath, 'a/primus.js')
   }
 };
