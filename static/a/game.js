@@ -88,15 +88,6 @@ Game.prototype.init = function Game_init()
       _game.setTeams(data.game.teams);
     }
 
-    // [game:error]
-    if (data['game:error'])
-    {
-      if (_game._chat)
-      {
-        _game._chat.addSystemMessage('Error: '+data['game:error'].err.message+'.', 'error');
-      }
-    }
-
     // [game:team_added]
     if (data['game:team_added'])
     {

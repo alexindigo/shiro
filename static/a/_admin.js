@@ -79,15 +79,17 @@ Game.prototype._postInit = function Game__postInit()
       _game._displayTeamsAnswers();
     }
 
+    // [game:error]
+    if (data['game:error'])
+    {
+      _game._handleError(data['game:error']);
+    }
+
     // [admin:error]
     if (data['admin:error'])
     {
-      if (_game._chat)
-      {
-        _game._chat.addSystemMessage('Error: '+data['admin:error'].err.message+'.', 'error');
-      }
+      _game._handleError(data['admin:error']);
     }
-
   });
 
   // --- add local event handlers
@@ -434,6 +436,28 @@ Game.prototype._displayTeamsAnswers = function Game__displayTeamsAnswers(show)
   teams = $.filter(this.teams, function(t){ return t.answers && t.answers[_game.questionInPlay]; });
 
   this._renderTeamsAnswers(teams);
+}
+
+// Override team's login
+Game.prototype._login = function Game__login(instance)
+{
+  // if current instance is out of date
+  // reset it
+  if (instance && this.instance() != instance)
+  {
+    this.instance(instance);
+    this.user(false);
+  }
+
+  // check for user
+  if (!this.user())
+  {
+    this._toggleAuthModal(true, 'admin');
+  }
+  else // try to login
+  {
+    this.socket.write({ 'game:auth': this.user() });
+  }
 }
 
 // --- toggles team modals on/off

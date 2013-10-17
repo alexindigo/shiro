@@ -432,6 +432,11 @@
 {
   content: "correct";
 }
+  .answer_teams_team_correct.answer_teams_control_selected
+  {
+    color: #33dd33;
+  }
+
 
 .answer_teams_team_wrong
 {
@@ -441,6 +446,11 @@
 {
   content: "wrong";
 }
+  .answer_teams_team_wrong.answer_teams_control_selected
+  {
+    color: #dd3333;
+  }
+
 
   .answer_teams_team:hover .answer_teams_control:not(.answer_teams_control_selected)
   {

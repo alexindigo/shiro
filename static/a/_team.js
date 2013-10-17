@@ -81,54 +81,7 @@ Game.prototype._postInit = function Game__postInit()
     // [game:error]
     if (data['game:error'])
     {
-      // check error code
-      // only handle 401 for now
-      switch (data['game:error'].err.code)
-      {
-        case 401:
-          _game.user(false);
-          _game._login('team');
-          break;
-      }
-
-      // check error origin
-      switch (data['game:error'].origin)
-      {
-        // handle login errors
-        case 'auth':
-          _game.user(false);
-          _game._login('team');
-          break;
-      }
-    }
-
-    // [admin:error]
-    if (data['admin:error'])
-    {
-      if (_game._chat)
-      {
-        _game._chat.addSystemMessage('Error: '+data['admin:error'].err.message+'.', 'error');
-      }
-
-      // check error code
-      // only handle 401 for now
-      switch (data['admin:error'].err.code)
-      {
-        case 401:
-          _game.user(false);
-          _game._login('admin');
-          break;
-      }
-
-      // check error origin
-      switch (data['admin:error'].origin)
-      {
-        // handle login errors
-        case 'auth':
-          _game.user(false);
-          _game._login('admin');
-          break;
-      }
+      _game._handleError(data['game:error']);
     }
 
     // --- team
@@ -136,13 +89,8 @@ Game.prototype._postInit = function Game__postInit()
     // [team:error]
     if (data['team:error'])
     {
-      if (_game._chat)
-      {
-        _game._chat.addSystemMessage('Error: '+data['team:error'].err.message+'.', 'error');
-      }
+      _game._handleError(data['team:error']);
     }
-
-
   });
 
   // --- create auth prompt
@@ -171,10 +119,41 @@ Game.prototype._postInit = function Game__postInit()
       {action: 'yes', title: 'yes'}
     ]
   });
-
 }
 
-Game.prototype._login = function Game__login(type, instance)
+Game.prototype._handleError = function Game__handleError(error)
+{
+  if (typeof error != 'object' && typeof error.err != 'object') return;
+
+  if (this._chat)
+  {
+    this._chat.addSystemMessage('Error: '+error.err.message+'.', 'error');
+  }
+
+  // check error code
+  // only handle 401 for now
+  switch (error.err.code)
+  {
+    case 401:
+      this.user(false);
+      this._login();
+      return;
+      break;
+  }
+
+  // check error origin
+  switch (error.origin)
+  {
+    // handle login errors
+    case 'auth':
+      this.user(false);
+      this._login();
+      return;
+      break;
+  }
+}
+
+Game.prototype._login = function Game__login(instance)
 {
   // if current instance is out of date
   // reset it
@@ -187,7 +166,7 @@ Game.prototype._login = function Game__login(type, instance)
   // check for user
   if (!this.user())
   {
-    this._toggleAuthModal(true, type);
+    this._toggleAuthModal(true, 'team');
   }
   else // try to login
   {

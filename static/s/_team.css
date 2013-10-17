@@ -48,6 +48,17 @@
     color: #333333;
     border-color: #999999;
   }
+/* make submit button extra bright */
+.answer_form_messagebox_send
+{
+  color: #555555;
+  border-color: #999999;
+}
+  .answer_form_messagebox_send:hover
+  {
+    color: #dd3333;
+    border-color: #dd3333;
+  }
 
 /* has focus */
 
