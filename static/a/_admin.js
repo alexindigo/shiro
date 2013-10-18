@@ -434,7 +434,6 @@ Game.prototype._displayTeamsAnswers = function Game__displayTeamsAnswers(show)
 
   // get only ones answered
   teams = $.filter(this.teams, function(t){ return t.answers && t.answers[_game.questionInPlay]; });
-
   this._renderTeamsAnswers(teams);
 }
 
@@ -704,7 +703,7 @@ Game.prototype._drawTeamStub = function Game__drawTeamStub(_game, d)
   // this here is a DOM element
   var el   = _game.d3.select(this)
     , isMe = (_game.user() && d.login == _game.user().login)
-    , frac = d.time_bonus && d.points ? Math.round(d.time_bonus / (d.points * 60000) * 1000) : 0
+    , frac = d.time_bonus && d.points ? Math.round(d.time_bonus / ((d.points - (d.adjustment || 0)) * 60000) * 1000) : 0
     , bonus = Math.round(d.time_bonus/1000)
     , html = ''
     ;

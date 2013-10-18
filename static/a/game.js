@@ -228,8 +228,7 @@ Game.prototype.addTeam = function Game_addTeam(team)
 Game.prototype.updateTeam = function Game_updateTeam(team)
 {
   // merge in updated team data
-  this.teams = $.each(this.teams, function(t){ if (t.login == team.login) { $.merge(t, team); } });
-
+  this.teams = $.transform(this.teams, function(result, t){ if (t.login == team.login) { result.push(team) } else { result.push(t); } return result; });
   this._renderTeams();
 }
 
@@ -424,7 +423,7 @@ Game.prototype._drawTeamStub = function Game__drawTeamStub(_game, d)
   // this here is a DOM element
   var el   = _game.d3.select(this)
     , isMe = (_game.user() && d.login == _game.user().login)
-    , frac = d.time_bonus && d.points ? Math.round(d.time_bonus / (d.points * 60000) * 1000) : 0
+    , frac = d.time_bonus && d.points ? Math.round(d.time_bonus / ((d.points - (d.adjustment || 0)) * 60000) * 1000) : 0
     , html = ''
     ;
 

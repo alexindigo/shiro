@@ -1,6 +1,6 @@
 {
   "name": "shiro",
-  "version": "0.1.5",
+  "version": "0.2.0",
   "description": "Online quiz game engine, inspired by russian tv show 'What? Where? When?' (Million Dollar Mind Game).",
   "main": "server.js",
   "repository": {
