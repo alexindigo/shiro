@@ -387,6 +387,7 @@
   width: 90%;
   height: auto;
   vertical-align: middle;
+  white-space: pre-line;
   pointer-events: none;
   -moz-user-select: none;
   -webkit-user-select: none;

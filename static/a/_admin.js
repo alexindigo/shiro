@@ -704,7 +704,7 @@ Game.prototype._drawTeamStub = function Game__drawTeamStub(_game, d)
   var el   = _game.d3.select(this)
     , isMe = (_game.user() && d.login == _game.user().login)
     , frac = d.time_bonus && d.points ? Math.round(d.time_bonus / ((d.points - (d.adjustment || 0)) * 60000) * 1000) : 0
-    , bonus = Math.round(d.time_bonus/1000)
+    , bonus = $.reduce(d.answers, function(total, a){ return a.correct ? total + a.time[0] : total }, 0)
     , html = ''
     ;
 
