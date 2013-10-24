@@ -2,7 +2,7 @@ $.domReady(function()
 {
   var primus = new Primus();
 
-  /*var*/ game = new Game(
+  var game = new Game(
       { type        : window.gameType
       , d3          : d3
       , transport   : primus

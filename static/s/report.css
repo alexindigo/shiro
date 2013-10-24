@@ -1,0 +1,249 @@
+@import url("/s/fonts.css");
+
+body
+{
+  background-color: #eeeeee;
+}
+body
+{
+  cursor: grab;
+  cursor: -webkit-grab;
+}
+  body.rotating
+  {
+    cursor: grabbing;
+    cursor: -webkit-grabbing;
+  }
+
+.board
+{
+  display: block;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  width: 60%;
+  height: 100%;
+  border: 1px solid #cccccc;
+
+  background-color: #ffffff;
+  -webkit-perspective: 100000px;
+  perspective: 100000px;
+  -webkit-transform: translateX(-50%) translateY(-50%) rotateX(60deg) rotateZ(15deg);
+  -webkit-transform-style: preserve-3d;
+  transform: translateX(-50%) translateY(-50%) rotateX(60deg) rotateZ(15deg);
+  transform-style: preserve-3d;
+  z-index: 0;
+}
+  .board.loading
+  {
+    background-image: url("/i/wait_report.gif");
+  }
+
+.team
+{
+  position: relative;
+  width: 100%;
+  border-top: 1px solid #cccccc;
+}
+  .team:first-child
+  {
+    border: none;
+  }
+.team:nth-child(2n)
+{
+  background-color: #dddddd;
+}
+.team:nth-child(-n+5)
+{
+  background-color: rgba(51, 221, 51, 0.3);
+  border-bottom: 1px solid #33dd33;
+}
+  .team:nth-child(-2n+4)
+  {
+    background-color: rgba(51, 221, 51, 0.5);
+  }
+.team:nth-child(5)
+{
+  border-bottom: 2px solid #33dd33;
+}
+
+.team:nth-child(-n+5):before,
+.team:nth-child(-n+5):after
+{
+  color: #339933;
+  background-color: rgba(51, 221, 51, 0.3);
+}
+
+
+.team:before,
+.team:after
+{
+  content: attr(data-name);
+
+  position: absolute;
+  display: block;
+  width: auto;
+  top: 0px;
+  height: 100%;
+  padding: 10px 20px;
+  font-size: 20px;
+  color: #808080;
+  background-color: rgba(255, 255, 255, 0.5);
+  white-space: nowrap;
+  z-index: 1;
+}
+.team:before
+{
+  content: attr(data-name);
+  right: 100%;
+  text-align: right;
+}
+.team:after
+{
+  content: attr(data-points);
+  left: 100%;
+  text-align: left;
+}
+  .team.hover:before,
+  .team.hover:after
+  {
+    color: #000000;
+  }
+
+
+.round
+{
+  position: relative;
+  display: inline-block;
+  height: 100%;
+  border-left: 1px solid #cccccc;
+}
+  .round:first-child
+  {
+    border: none;
+  }
+
+.team:first-child .round:before,
+.team:last-child .round:before
+{
+  content: attr(data-round);
+
+  position: absolute;
+  display: block;
+  width: auto;
+  left: 0px;
+  width: 100%;
+  padding: 20px 10px;
+  font-size: 20px;
+  color: #808080;
+  text-align: center;
+  background-color: rgba(255, 255, 255, 0.5);
+  white-space: nowrap;
+  z-index: 1;
+}
+.team:first-child .round:before
+{
+  bottom: 100%;
+}
+.team:last-child .round:before
+{
+  top: 100%;
+}
+  .round.hover:before
+  {
+    color: #000000;
+  }
+
+
+.cube
+{
+  position: relative;
+  display: block;
+  top: 50%;
+  left: 50%;
+  width: 50px;
+  height: 50px;
+  margin: -25px 0px 0px -25px;
+  background-color: rgba(221, 221, 221, 0.5);
+  outline: 1px solid #cccccc;
+  -webkit-transform: rotateZ(-90deg);
+  -webkit-transform-style: preserve-3d;
+  transform: rotateZ(-90deg);
+  transform-style: preserve-3d;
+}
+.cube:before,
+.cube:after
+{
+  content: "";
+
+  position: absolute;
+  display: block;
+  top: 0px;
+  width: 100%;
+  height: 100%;
+  background-color: inherit;
+  outline: inherit;
+  -webkit-transform: rotateY(90deg) translateX(-50%);
+  -webkit-transform-style: preserve-3d;
+  transform: rotateY(90deg) translateX(-50%);
+  transform-style: preserve-3d;
+}
+.cube:before
+{
+  left: -50%;
+}
+.cube:after
+{
+  right: -50%;
+}
+.cube>i
+{
+  position: absolute;
+  display: block;
+  top: 0px;
+  left: 0px;
+  width: 100%;
+  height: 100%;
+  font-size: 25px;
+  color: #ffffff;
+  text-align: center;
+  background-color: inherit;
+  outline: inherit;
+  -webkit-transform: rotateZ(90deg) translateZ(50px);
+  -webkit-transform-style: preserve-3d;
+  transform: rotateZ(90deg) translateZ(50px);
+  transform-style: preserve-3d;
+}
+.cube>i:before,
+.cube>i:after
+{
+  content: "";
+
+  position: absolute;
+  display: block;
+  top: 0px;
+  width: 100%;
+  height: 100%;
+  background-color: inherit;
+  outline: inherit;
+  -webkit-transform: rotateY(-90deg) translateX(-50%);
+  -webkit-transform-style: preserve-3d;
+  transform: rotateY(-90deg) translateX(-50%);
+  transform-style: preserve-3d;
+}
+.cube>i:before
+{
+  left: -50%;
+}
+.cube>i:after
+{
+  right: -50%;
+}
+
+@-moz-document url-prefix()
+{
+  .cube
+  {
+    outline: 0px !important;
+  }
+}
